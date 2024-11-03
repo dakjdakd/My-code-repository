@@ -1,0 +1,540 @@
+
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>新闻摘要</title>
+        
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+        
+        :root {
+            --x: 0;
+            --y: 0;
+            --bg-color: #f0f2f5;
+            --grid-color: rgba(0, 0, 0, 0.1);  // 稍微降低透明度，使网格不那么突兀
+            --grid-size: 40px;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: var(--grid-size) var(--grid-size);
+            background-position: 0 0, 0 0;
+            background-attachment: fixed;  // 添加这行，使网格固定在视口
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, transparent 0%, var(--bg-color) 100%);  // 调整渐变范围
+            z-index: 1;  // 将z-index从-1改为1
+            pointer-events: none;  // 添加这行，使渐变层不影响交互
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;  // 添加这行
+            z-index: 2;  // 添加这行，确保内容在渐变层之上
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+        
+        h2 {
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 5px;
+            font-size: 2em;
+        }
+        
+        h3 {
+            color: #16a085;
+            font-size: 1.5em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .meta-info {
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            transition: all 0.3s ease;
+        }
+        
+        .meta-info p {
+            margin: 5px 0;
+        }
+        
+        .dark-mode {
+            --bg-color: #1a1a1a;
+            --grid-color: rgba(255, 255, 255, 0.1);  // 调整深色模式下的网格透明度
+            color: #ecf0f1;
+        }
+        
+        .dark-mode .container {
+            background-color: #2c3e50;
+            box-shadow: 0 0 20px rgba(255,255,255,0.1);
+        }
+        
+        .dark-mode h1, .dark-mode h2, .dark-mode h3 {
+            color: #3498db;
+        }
+        
+        .dark-mode a {
+            color: #5dade2;
+        }
+        
+        .dark-mode .meta-info {
+            background-color: #34495e;
+            color: #bdc3c7;
+        }
+        
+        #darkModeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        #darkModeToggle:hover {
+            background-color: #2980b9;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 15px;
+            }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            h3 { font-size: 1.2em; }
+        }
+        
+        .card {
+            width: 600px;
+            aspect-ratio: 2 / 1.1;
+            max-height: calc(100vh - 2rem);
+            position: relative;
+            overflow: hidden;
+            max-width: calc(100% - 2rem);
+            margin: 20px auto;
+        }
+        
+        .assets {
+            position: absolute;
+            inset: 0;
+            border-radius: 4em;
+            overflow: hidden;
+        }
+        
+        .assets > img {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            translate: -50% 0;
+            height: 100%;
+            width: 660px;
+            object-fit: cover;
+            object-position: center 43%;
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        .assets > img:first-of-type {
+            filter: saturate(1.5) brightness(0.9);
+            object-position: calc(-50% + (var(--x) * 30px)) calc(43% + (var(--y) * -20px));
+        }
+        
+        .assets > img:last-of-type {
+            object-position: calc(-50% + (var(--x) * 40px)) calc(43% + (var(--y) * -40px));
+        }
+        
+        .assets h3 {
+            position: absolute;
+            left: 50%;
+            top: 6%;
+            margin: 0;
+            font-size: 8rem;
+            translate: -50% 0;
+            text-transform: uppercase;
+            font-family: 'Bebas Neue', sans-serif;
+            color: white;
+            translate: calc(-50% + (var(--x) * -30px)) calc(var(--y) * -20px);
+        }
+        
+        .card-content {
+            min-height: 32%;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            color: white;
+            display: grid;
+            gap: 0.2rem;
+            place-items: center;
+            align-content: center;
+            padding-bottom: 0.5rem;
+            z-index: 2;
+        }
+        
+        .card-content svg {
+            width: 20px;
+        }
+        
+        .card-content p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            position: relative;
+        }
+        
+        .card-content p:first-of-type::after {
+            content: '';
+            position: absolute;
+            bottom: calc(100% + 1rem);
+            left: 50%;
+            width: 6ch;
+            background: white;
+            height: 1px;
+            translate: -50% 0;
+        }
+        
+        .card-content p:last-of-type {
+            opacity: 0.8;
+        }
+        
+        .blur {
+            --layers: 5;
+            position: absolute;
+            inset: 0;
+        }
+        
+        .blur .layer {
+            --blur: calc(
+                sin(((var(--layers) - var(--index)) / var(--layers)) * 90deg) * 30
+            );
+            --stop: calc(
+                sin(((var(--index)) / var(--layers)) * 90deg) * 15
+            );
+            position: absolute;
+            inset: 0;
+            background: hsl(0 0% 60% / 0.05);
+            backdrop-filter: blur(calc(var(--blur) * 1px));
+            mask: radial-gradient(
+                150% 130% at 45% 90%,
+                #fff 15%,
+                #0000 calc((15 + var(--stop)) * 1%)
+            );
+        }
+    </style>
+    
+    </head>
+    <body>
+        <button id="darkModeToggle" onclick="toggleDarkMode()">切换到深色模式</button>
+        <div class="card">
+            <div class="assets">
+                <img src="https://assets.codepen.io/605876/do-not-copy-osaka-sky.jpeg" alt="" />
+                <h3>新闻摘要</h3>
+                <img src="https://assets.codepen.io/605876/do-not-copy-osaka-tower.png" alt="" />
+            </div>
+            <div class="blur">
+                <div class="layer" style="--index:1;"></div>
+                <div class="layer" style="--index:2;"></div>
+                <div class="layer" style="--index:3;"></div>
+                <div class="layer" style="--index:4;"></div>
+                <div class="layer" style="--index:5;"></div>
+            </div>
+            <div class="card-content">
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path d="M15.75 8.25a.75.75 0 0 1 .75.75c0 1.12-.492 2.126-1.27 2.812a.75.75 0 1 1-.992-1.124A2.243 2.243 0 0 0 15 9a.75.75 0 0 1 .75-.75Z" />
+                        <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM4.575 15.6a8.25 8.25 0 0 0 9.348 4.425 1.966 1.966 0 0 0-1.84-1.275.983.983 0 0 1-.97-.822l-.073-.437c-.094-.565.25-1.11.8-1.267l.99-.282c.427-.123.783-.418.982-.816l.036-.073a1.453 1.453 0 0 1 2.328-.377L16.5 15h.628a2.25 2.25 0 0 1 1.983 1.186 8.25 8.25 0 0 0-6.345-12.4c.044.262.18.503.389.676l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 0 1-1.161.886l-.143.048a1.107 1.107 0 0 0-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 0 1-1.652.928l-.679-.906a1.125 1.125 0 0 0-1.906.172L4.575 15.6Z" clip-rule="evenodd" />
+                    </svg>
+                    <span>今日热点</span>
+                </p>
+                <p>2024-11-02</p>
+            </div>
+        </div>
+        <div class="container">
+            <p>```markdown</p>
+
+<h1>Latest News Summary</h1>
+
+<h2>BBC News</h2>
+
+<ol>
+<li><p><strong>Celebrity Halloween Costumes 2024</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Janelle Monae and Pixie Lott showcased dazzling costumes, with Monae opting for a classic 1980s film look and Lott dressing as an Aperol Spritz.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/c2dl392g9e4o">Read More</a></li>
+</ul></li>
+<li><p><strong>UK Public Finances 'Black Hole'</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Economists warn of a £22bn shortfall in UK public finances, urging the new government to address the issue.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cx2e12j4gz0o">Read More</a></li>
+</ul></li>
+<li><p><strong>Hezbollah Rocket Attacks in Israel</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Seven killed in northern Israel in the deadliest rocket attacks in months.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/ce8yjr3zyz8o">Read More</a></li>
+</ul></li>
+<li><p><strong>Conservative Party Leader Vote</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Voting concludes for the new Conservative Party leader, with members choosing between Kemi Badenoch and Robert Jenrick.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cx2dqzqx2y1o">Read More</a></li>
+</ul></li>
+<li><p><strong>Russian Spy's Daughter Poisoning</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> A doctor testifies about the critical condition of Yulia Skripal upon her hospital arrival.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/c154z1d1nqgo">Read More</a></li>
+</ul></li>
+<li><p><strong>Private Schools Legal Action over VAT</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> The Independent Schools Council votes to proceed with legal action against proposed VAT plans.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/c98d3xr0290o">Read More</a></li>
+</ul></li>
+<li><p><strong>NHS Productivity and Funding</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Health secretary demands improved NHS productivity in exchange for a £25 billion cash injection.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/c238njy0vmmo">Read More</a></li>
+</ul></li>
+<li><p><strong>Microsoft Windows 10 Extended Support</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Microsoft to charge $30 for a year of extended security updates for Windows 10 users as support ends in 2025.</li>
+<li><a href="http://www.theverge.com/2024/10/31/24284398/microsoft-windows-10-extended-security-updates-consumer-pricing">Read More</a></li>
+</ul></li>
+<li><p><strong>Budget Tax Rises Impact on Workers</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Tax increases in the Budget may reduce potential pay rises for workers.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cgj72wxw8jxo">Read More</a></li>
+</ul></li>
+<li><p><strong>High-Value Cheese Theft</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Man arrested over the theft of 22 tonnes of high-value cheddar worth over £300,000.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cg57yr2dqd2o">Read More</a></li>
+</ul></li>
+<li><p><strong>Russia Fines Google</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Russia imposes a massive fine on Google for restricting Russian state media on YouTube.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cdxvnwkl5kgo">Read More</a></li>
+</ul></li>
+</ol>
+
+<h2>The Verge News</h2>
+
+<ol>
+<li><p><strong>Google Maps Enhanced Navigation</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> New features in Google Maps provide more detailed navigation, including lane guidance.</li>
+<li><a href="http://www.theverge.com/2024/10/31/24284455/google-maps-enhanced-navigation-features-city-driving">Read More</a></li>
+</ul></li>
+<li><p><strong>Donald Trump and Broadcast TV Conflict</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Trump and others call for FCC to revoke broadcast licenses, sparking debate on media regulation.</li>
+<li><a href="http://www.theverge.com/24283652/fcc-license-donald-trump-elon-musk-first-amendment-fairness-doctrine-please-vote-decoder">Read More</a></li>
+</ul></li>
+<li><p><strong>Kristen Radtke's Home Office</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Insight into The Verge’s art team member Kristen Radtke’s home office setup.</li>
+<li><a href="http://www.theverge.com/24277807/home-office-mac-wacom">Read More</a></li>
+</ul></li>
+<li><p><strong>Tech Leaders and Trump</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Trump claims tech CEOs, including Sundar Pichai and Mark Zuckerberg, have complimented him.</li>
+<li><a href="http://www.theverge.com/2024/10/31/24282719/tech-leaders-trump-jeff-bezos-zuckerberg-pichai">Read More</a></li>
+</ul></li>
+<li><p><strong>Apple’s New Macs</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Apple unveils redesigned Mac Mini and other new Macs equipped with M4 chips.</li>
+<li><a href="http://www.theverge.com/2024/10/30/24283861/apple-redesigned-mac-mini-macbook-pro-imac-m4-photos">Read More</a></li>
+</ul></li>
+<li><p><strong>Starlink Mini Review</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> SpaceX’s Starlink Mini offers portable, fast satellite internet for areas lacking 4G and 5G coverage.</li>
+<li><a href="http://www.theverge.com/24275688/starlink-mini-review-battery-powered-backpack-comparison">Read More</a></li>
+</ul></li>
+<li><p><strong>Shinichirō Watanabe on Lazarus</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Creator Shinichirō Watanabe discusses his new sci-fi show inspired by the opioid crisis.</li>
+<li><a href="http://www.theverge.com/24279398/shinichiro-watanabe-lazarus-interview-opioid-crisis-climate-change-sci-fi">Read More</a></li>
+</ul></li>
+<li><p><strong>Political Commentary on Trump</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Opinion piece argues a vote for Trump could lead to increased school shootings and measles outbreaks.</li>
+<li><a href="http://www.theverge.com/24282022/kamala-harris-endorsement-presidential-election-2024">Read More</a></li>
+</ul></li>
+</ol>
+
+<p><strong>Notable Trends:</strong>
+- <strong>Security and Technology:</strong> Extended support for Windows 10, enhanced Google Maps features, and the launch of Starlink Mini highlight ongoing advancements and concerns in tech security and accessibility.
+- <strong>Political Developments:</strong> The Conservative Party leadership vote, Trump's interactions with tech leaders and media, and commentary on the 2024 presidential election reflect significant political activities.
+- <strong>Health and Safety:</strong> Issues ranging from NHS funding and productivity to public health concerns in political discourse underscore ongoing challenges in healthcare and safety.
+```</p>
+
+<p>This structured summary provides a quick overview of the day's top news from BBC and The Verge, organized by source and topic, with key insights highlighted for easy comprehension.</p>
+
+<hr />
+
+<p>程序开始运行时间: 2024-11-02 01:20:50</p>
+
+<hr />
+
+<p>程序结束运行时间: 2024-11-02 01:23:03</p>
+
+<hr />
+
+<p>整个运行过程使用了 132.92 秒.</p>
+
+<hr />
+
+<h2>本次程序运行使用的模型: glm-4-plus</h2>
+
+            <div class="meta-info">
+                <p>程序开始运行时间: 2024-11-02 01:20:50</p>
+                <p>程序结束运行时间: 2024-11-02 01:23:03</p>
+                <p>整个运行过程使用了 132.92 秒</p>
+                <p>本次程序运行使用的模型: glm-4-plus</p>
+            </div>
+        </div>
+        
+    <script src="https://cdn.skypack.dev/gsap@3.12.0"></script>
+    <script>
+    function toggleDarkMode() {
+        const body = document.body;
+        const button = document.getElementById('darkModeToggle');
+        body.classList.toggle('dark-mode');
+        if (body.classList.contains('dark-mode')) {
+            button.textContent = '切换到浅色模式';
+        } else {
+            button.textContent = '切换到深色模式';
+        }
+    }
+
+    function smoothScroll(target) {
+        const element = document.querySelector(target);
+        window.scrollTo({
+            top: element.offsetTop,
+            behavior: 'smooth'
+        });
+    }
+
+    const UPDATE = ({ x, y }) => {
+      gsap.set(document.documentElement, {
+        '--x': gsap.utils.mapRange(0, window.innerWidth, -1, 1, x),
+        '--y': gsap.utils.mapRange(0, window.innerHeight, -1, 1, y),
+      })
+    }
+
+    window.addEventListener('mousemove', UPDATE)
+
+    const handleOrientation = ({ beta, gamma }) => {
+      const isLandscape = window.matchMedia('(orientation: landscape)').matches
+      gsap.set(document.documentElement, {
+        '--x': gsap.utils.clamp(-1, 1, isLandscape ? gsap.utils.mapRange(-45, 45, -1, 1, beta) : gsap.utils.mapRange(-45, 45, -1, 1, gamma)),
+        '--y': gsap.utils.clamp(-1, 1, isLandscape ? gsap.utils.mapRange(20, 70, 1, -1, Math.abs(gamma)) : gsap.utils.mapRange(20, 70, 1, -1, beta)),
+      })
+    }
+
+    const START = () => {
+      if (
+        DeviceOrientationEvent?.requestPermission
+      ) {
+        Promise.all([
+          DeviceOrientationEvent.requestPermission(),
+        ]).then((results) => {
+          if (results.every((result) => result === "granted")) {
+            window.addEventListener("deviceorientation", handleOrientation);
+          }
+        });
+      } else {
+        window.addEventListener("deviceorientation", handleOrientation);
+      }
+    };
+    document.body.addEventListener('click', START, { once: true })
+    </script>
+    
+    </body>
+    </html>
+    
