@@ -1,0 +1,488 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="icon" type="image/png" href="../assets/favicon.png">
+            <title>AI新闻摘要</title>
+            
+        <style>
+            :root {
+                --primary-color: #4a4a4a;
+                --secondary-color: #0066cc;
+                --background-color: #f4f4f4;
+                --card-background: #ffffff;
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--background-color);
+                color: var(--primary-color);
+                margin: 0;
+                padding: 0;
+                line-height: 1.6;
+                transition: background-color 0.3s, color 0.3s;
+            }
+            .container {
+                max-width: 800px;
+                margin: 0 auto;
+                padding: 20px;
+                position: relative;
+                z-index: 1;
+                background: rgba(244, 244, 244, 0.9);
+                border-radius: 15px;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                margin: 20px auto;
+                padding: 20px;
+            }
+            header {
+                background-color: var(--secondary-color);
+                color: white;
+                text-align: center;
+                padding: 1em;
+                position: relative;
+                z-index: 1;
+                background: rgba(0, 102, 204, 0.9);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            h1 {
+                margin: 0;
+            }
+            h2 {
+                color: var(--secondary-color);
+                border-bottom: 2px solid var(--secondary-color);
+                padding-bottom: 10px;
+                margin-top: 30px;
+            }
+            .card {
+                background-color: var(--card-background);
+                border-radius: 8px;
+                box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+                margin-bottom: 20px;
+                padding: 20px;
+                transition: transform 0.3s ease;
+                background: rgba(255, 255, 255, 0.9);
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+            }
+            .card:hover {
+                transform: scale(1.05);
+            }
+            .card h3 {
+                color: var(--secondary-color);
+                margin-top: 0;
+            }
+            a {
+                color: var(--secondary-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .emoji {
+                font-size: 1.5em;
+                margin-right: 5px;
+            }
+            footer {
+                text-align: center;
+                margin-top: 40px;
+                padding: 20px;
+                background-color: var(--secondary-color);
+                color: white;
+                position: relative;
+                z-index: 1;
+                background: rgba(0, 102, 204, 0.9);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            @media (max-width: 600px) {
+                .container {
+                    padding: 10px;
+                }
+            }
+            
+            /* 暗黑模式样式 */
+            body.dark-mode {
+                --primary-color: #e0e0e0;
+                --secondary-color: #4da6ff;
+                --background-color: #2c2c2c;
+                --card-background: #3c3c3c;
+            }
+            body.dark-mode .container {
+                background: rgba(44, 44, 44, 0.9);
+            }
+            body.dark-mode .card {
+                background: rgba(60, 60, 60, 0.9);
+            }
+            body.dark-mode header,
+            body.dark-mode footer {
+                background: rgba(26, 26, 26, 0.9);
+            }
+            #darkModeToggle {
+                background-color: var(--secondary-color);
+                color: white;
+                border: none;
+                padding: 10px 20px;
+                border-radius: 5px;
+                cursor: pointer;
+                transition: background-color 0.3s;
+            }
+            #darkModeToggle:hover {
+                background-color: #0052a3;
+            }
+            
+            /* 新增的动画和交互样式 */
+            @keyframes wave {
+                50% { rotate: 10deg; }
+            }
+            
+            @keyframes hover {
+                from, to { translate: 0 -5%; }
+                50% { translate: 0 5%; }
+            }
+            
+            .intro {
+                display: flex;
+                justify-content: center;
+                gap: 0.2em;
+                font-size: 2em;
+                margin-top: 20px;
+            }
+            
+            .intro span {
+                display: inline-block;
+            }
+            
+            .intro span:first-child {
+                transform-origin: right bottom;
+                animation: wave 250ms 1s ease 3;
+            }
+            
+            .intro span:last-child {
+                animation: hover 500ms linear infinite;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            .fade-in {
+                animation: fadeIn 1s ease-out;
+            }
+        </style>
+        
+            
+        <script type="x-shader/x-fragment">#version 300 es
+        precision highp float;
+        out vec4 O;
+        uniform float time;
+        uniform vec2 resolution;
+        #define FC gl_FragCoord.xy
+        #define R resolution
+        #define T time
+        #define hue(a) (.6+.6*cos(6.3*(a)+vec3(0,83,21)))
+        float rnd(float a) {
+            vec2 p=fract(a*vec2(12.9898,78.233)); p+=dot(p,p*345.);
+            return fract(p.x*p.y);
+        }
+        vec3 pattern(vec2 uv) {
+            vec3 col=vec3(0);
+            for (float i=.0; i++<20.;) {
+                float a=rnd(i);
+                vec2 n=vec2(a,fract(a*34.56)), p=sin(n*(T+7.)+T*.5);
+                float d=dot(uv-p,uv-p);
+                col+=.00125/d*hue(dot(uv,uv)+i*.125+T);
+            }
+            return col;
+        }
+        void main(void) {
+            vec2 uv=(FC-.5*R)/min(R.x,R.y);
+            vec3 col=vec3(0);
+            float s=2.4,
+            a=atan(uv.x,uv.y),
+            b=length(uv);
+            uv=vec2(a*5./6.28318,.05/tan(b)+T);
+            uv=fract(uv)-.5;
+            col+=pattern(uv*s);
+            O=vec4(col,1);
+        }</script>
+        
+        </head>
+        <body>
+            <header>
+                <h1>🚀 AI新闻摘要 🤖</h1>
+                <button id="darkModeToggle" onclick="toggleDarkMode()">切换到暗色模式</button>
+            </header>
+            <div class="intro" aria-label="向下滚动查看更多">
+                <span>👋</span>
+                <span>⬇️</span>
+            </div>
+            <div class='container'><div class='card'><h2>AI's Wild West: Unleashing the Herd of LocalLLama Innovations 🦄🌟</h2>
+<p>Imagine a world where your computer not only talks back but also understands the vibes of your cat memes. Welcome to the wild, wild west of AI, where LocalLLama subreddit wranglers are breaking new ground faster than a caffeinated cowboy on a sugar rush! 🚀🤠</p>
+</div><div class='card'><h2>1. Small Models, BigBrains: MMLU-Pro Scores 🧠</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gindy1/looks_like_intel_arrow_lake_can_support_4_dimms/">MMLU-Pro Scores</a></li>
+<li>Facts: Small AI models like Qwen2.5 and llama3.2 are flexing their tiny digital muscles on the MMLU-Pro benchmark. But wait, is it just memory gymnastics or actual smarts? 🤔</li>
+<li>Personal Thoughts: These little guys might not be Einsteins yet, but they're definitely not dummies. They remind us that size isn't everything in the AI rodeo.</li>
+<li>Description: While they struggle with complex tasks like translation, they're proving their worth in simpler arenas. Larger models might steal the show, but these small fries have their own charm.</li>
+</ul>
+</div><div class='card'><h2>2. TTS Showdown: Latency Face-Off 🎤⏱️</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gihnet/what_happened_to_llama_32_90bvision/">TTS Latency Analysis</a></li>
+<li>Blog Post: <a href="https://www.inferless.com/learn/comparing-different-text-to-speech---tts--models-for-different-use-cases">Comparing TTS Models</a></li>
+<li>Facts: Tortoise TTS, Piper TTS, and MeloTTS are racing against the clock. Who's the fastest talker in the west? 🐢🐇</li>
+<li>Personal Thoughts: These TTS models are like contestants in a bizarre AI rap battle. Who knew talking could be so competitive?</li>
+<li>Description: Users are calling for more contenders like f2-tts to join the fray. This isn't just about speed; it's about finding the smoothest operator for all your AI chat needs.</li>
+</ul>
+</div><div class='card'><h2>3. Intel's Arrow Lake: Memory Mavericks 🏹💾</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1giadgu/why_dont_any_of_the_big_ai_companies_support_a/">Intel Arrow Lake Memory Support</a></li>
+<li>Facts: Intel's Arrow Lake is strapping on 4 DIMMs at 6400 speeds. It's like giving your computer a quadruple espresso shot! ☕💪</li>
+<li>Personal Thoughts: If Arrow Lake is the future, I'm ready to saddle up and ride into this high-bandwidth frontier.</li>
+<li>Description: Comparisons with Ryzen 7950x3D are heating up. Will Arrow Lake's memory prowess make it the king of the AI hill?</li>
+</ul>
+</div><div class='card'><h2>4. Llama 3.2 90b-vision: The Visual Trailblazer 🐪👀</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1giozl9/speaking_with_your_local_llm_with_a_key_press_on/">Llama 3.2 90b-vision</a></li>
+<li>Facts: This Llama isn't just talking the talk; it's seeing the see! But those high VRAM requirements are like needing a mountain of hay to feed a hungry horse.</li>
+<li>Personal Thoughts: If only my eyes could see as well as this Llama. Future's looking bright, but my wallet might disagree.</li>
+<li>Description: Users are eyeing alternatives like Qwen2-VL 72B. The race for the best vision model is on, and it's as fierce as a wild west duel.</li>
+</ul>
+</div><div class='card'><h2>5. RAG Solutions: The Missing Sheriff 🤠🔍</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gic7v1/benchmarked_3090s_to_find_the_most_optimized/">RAG Solutions</a></li>
+<li>Facts: Major AI companies are playing hard to get with RAG solutions. Why the cold shoulder, folks?</li>
+<li>Personal Thoughts: It's like having a goldmine in your backyard but using it as a flowerpot. RAG solutions are underappreciated gems.</li>
+<li>Description: Snorkel AI, AWS Search, and Glean are stepping up, but the open-source posse is calling for more. Let's democratize this AI goldrush!</li>
+</ul>
+</div><div class='card'><h2>6. Speech to Text: Talk to the Hand, er, LLM 🗣️🖥️</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1ghwdjy/m4_max_546gbs/">Speech to Text for Local LLMs</a></li>
+<li>Facts: A new tool lets you yap at your LLM on Linux. No hands, no problem! Just press a button and let the words fly.</li>
+<li>Personal Thoughts: Finally, I can argue with my computer without breaking a sweat. Talk about a game-changer!</li>
+<li>Description: Minimal UI, maximal convenience. This tool is like having a telepathic sidekick for your LLM.</li>
+</ul>
+</div><div class='card'><h2>7. Powering Up 3090s: The GPU Gauntlet 🔌🎮</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gi102k/introducing_cascade_of_semantically_integrated/">Optimized Power Configuration for 3090s</a></li>
+<li>Facts: Researchers are tweaking NVIDIA 3090 GPUs to juice up AI performance. It's like fine-tuning a race car for the AI track.</li>
+<li>Personal Thoughts: If only I could optimize my coffee intake as efficiently as these GPUs. Dreams!</li>
+<li>Description: Backends like llama.cpp and mlc-llm are in the spotlight. The goal? Max performance, minimal energy drain.</li>
+</ul>
+</div><div class='card'><h2>8. AMD M4 Max: The Bandwidth Baron 🐎💾</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gijddh/combining_gofai_with_llms/">AMD M4 Max Memory Bandwidth</a></li>
+<li>Facts: AMD's M4 Max is boasting a whopping 546GB/s bandwidth. It's like having a superhighway in your PC!</li>
+<li>Personal Thoughts: This GPU might just be the magic carpet ride for AI enthusiasts. Here's hoping it doesn't burn a hole in the wallet.</li>
+<li>Description: Users are weighing the pros and cons. Is M4 Max the jack of all trades or just another flashy pony?</li>
+</ul>
+</div><div class='card'><h2>9. CaSIL: The Reasoning Wrangler 🤔🔗</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1giicjl/best_ideally_uncensored_long_context_model_128k/">CaSIL: Cascade of Semantically Integrated Layers</a></li>
+<li>Facts: CaSIL is here to whip language models into logical shape. It's like boot camp for AI brains.</li>
+<li>Personal Thoughts: If CaSIL can make AI think twice, we might just be on the brink of truly smart machines.</li>
+<li>Description: Users are eager for examples and clarity. Can CaSIL outsmart the current crop of reasoning algorithms?</li>
+</ul>
+</div><div class='card'><h2>10. GOFAI Meets LLMs: The Odd Couple 🤖📚</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gi3l2q/llama_31_70b_finetune_anecdotes_on_production/">Combining GOFAI with LLMs</a></li>
+<li>Facts: Marrying old-school AI with LLMs could be the next big thing. It's like teaching an old dog new tricks.</li>
+<li>Personal Thoughts: This combo might just be the secret sauce for AI that doesn't just talk the talk but walks the walk.</li>
+<li>Description: Users are buzzing about databases and formal provers. The future of AI might just be a blend of the old and the new.</li>
+</ul>
+</div><div class='card'><h2>11. Uncensored Context Kings: The Token Titans 🗝️📚</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gim74q/current_sota_model_for_dependency_parsing/">Uncensored Long Context Models</a></li>
+<li>Facts: Models like Hermes 3 405B are handling contexts up to 128k tokens. It's like having an elephant's memory!</li>
+<li>Personal Thoughts: These models are the unsung heroes of AI, handling more data than my brain can fathom.</li>
+<li>Description: Users are swapping recommendations like trading cards. Who will be the ultimate context king?</li>
+</ul>
+</div><div class='card'><h2>12. Llama 3.1 70B: Finetuning Feats 🐑🔧</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gir1by/is_smollm_only_8k_context/">Llama 3.1 70B Finetune Anecdotes</a></li>
+<li>Facts: Llama 3.1 70B is showing off its finetuning prowess with 2.5B tokens. It's like a chef perfecting a gourmet dish.</li>
+<li>Personal Thoughts: This level of finetuning is the artistry behind AI. It's where the magic happens.</li>
+<li>Description: Users are sharing insights and techniques. Finetuning might just be the secret ingredient for AI success.</li>
+</ul>
+</div><div class='card'><h2>13. Training Llama 4 on H100s: The Heavy Hitters 🦸‍♂️💻</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gi3l2q/llama_31_70b_finetune_anecdotes_on_production/">Training Llama 4 on H100s</a></li>
+<li>Facts: Llama 4 is getting a workout on NVIDIA's H100 GPUs. It's like training a superhero in a high-tech gym.</li>
+<li>Personal Thoughts: If Llama 4 lives up to the hype, we might just see AI do things we once thought were sci-fi.</li>
+<li>Description: Users are speculating about multi-tool calling and reasoning abilities. The future looks bright, but will it be too bright for some?</li>
+</ul>
+</div><div class='card'><h2>14. SOTA Dependency Parsing: The Grammar Gurus 📚🔍</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gim74q/current_sota_model_for_dependency_parsing/">SOTA Model for Dependency Parsing</a></li>
+<li>Facts: The 3-8B range models are aceing dependency parsing. It's like having a grammar genius in your pocket.</li>
+<li>Personal Thoughts: Parsing might sound boring, but it's the backbone of language understanding. These models are the unsung heroes.</li>
+<li>Description: Users are pointing out competent solutions. It's a grammar party, and everyone's invited!</li>
+</ul>
+</div><div class='card'><h2>15. Smollm's Context Challenge: The Tiny Titan 🐜📖</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gir1by/is_smollm_only_8k_context/">Smollm Context Length</a></li>
+<li>Facts: Smollm might be small, but can it handle the big leagues with just 8k tokens? It's like asking a Chihuahua to guard a castle.</li>
+<li>Personal Thoughts: Sometimes, size doesn't matter. It's all about what you can do with what you've got.</li>
+<li>Description: Users are weighing in on context length limitations. Is bigger always better, or can small models hold their own?</li>
+</ul>
+
+<p>In the grand rodeo of AI, LocalLLama riders are roping in innovations faster than you can say "yeehaw"! From tiny models showing off their might to GPUs flexing their muscles, the future is here, and it's as wild as a bucking bronco. So saddle up, partner, and let's ride this AI wave together! 🌊🤖🌟
+```</p>
+
+<h3>Feedback and Critique:</h3>
+
+<p><strong>Introduction:</strong>
+- The introduction is witty and engaging, setting the tone for the rest of the blog. The use of emojis is creative and adds a playful element.</p>
+
+<p><strong>Post Titles and Sections:</strong>
+- The titles are catchy and relevant, using emojis effectively to draw attention.
+- Each section provides a good mix of facts, personal thoughts, and descriptions, making the content informative and relatable.</p>
+
+<p><strong>Links:</strong>
+- Ensure that each link is correctly formatted and leads to the intended source. For instance, the link for "MMLU-Pro Scores" seems to be incorrect as it doesn't match the context.</p>
+
+<p><strong>Content:</strong>
+- The content is concise and to the point, which is great for readability.
+- Personal thoughts add a unique perspective and make the content more engaging.
+- Descriptions are clear and provide valuable insights into the projects and their impact.</p>
+
+<p><strong>Summary:</strong>
+- The summary is vivid and memorable, effectively wrapping up the blog post with a humorous and engaging tone.</p>
+
+<p><strong>Suggestions for Improvement:</strong>
+1. <strong>Link Accuracy:</strong> Double-check all links to ensure they are accurate and relevant to the content.
+2. <strong>Consistency in Formatting:</strong> Ensure consistent use of emojis and formatting across all sections.
+3. <strong>Technical Clarity:</strong> While the content is concise, some technical terms could be explained briefly for a broader audience.
+4. <strong>Engagement:</strong> Consider adding a call-to-action or a question at the end of the blog to encourage reader interaction.</p>
+
+<p>Overall, the blog post is well-structured, engaging, and informative. With a few minor adjustments, it can be even more impactful. Great work! 🌟🤖🚀</p>
+
+<hr />
+
+<p>程序开始运行时间: 2024-11-04 01:02:09</p>
+
+<hr />
+
+<p>程序结束运行时间: 2024-11-04 01:07:56</p>
+
+<hr />
+
+<p>整个运行过程使用了 346.60 秒.</p>
+
+<hr />
+
+<h2>本次程序运行使用的模型: glm-4-plus</h2>
+</div></div>
+            <footer>
+                <p>生成于 2024-11-04 01:07:56</p>
+            </footer>
+            
+        <script>
+            function toggleDarkMode() {
+                document.body.classList.toggle('dark-mode');
+                const button = document.getElementById('darkModeToggle');
+                if (document.body.classList.contains('dark-mode')) {
+                    button.textContent = '切换到亮色模式';
+                } else {
+                    button.textContent = '切换到暗色模式';
+                }
+            }
+
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    document.querySelector(this.getAttribute('href')).scrollIntoView({
+                        behavior: 'smooth'
+                    });
+                });
+            });
+            
+            // 新增的动画效果函数
+            function addFadeInEffect() {
+                const cards = document.querySelectorAll('.card');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            entry.target.classList.add('fade-in');
+                            observer.unobserve(entry.target);
+                        }
+                    });
+                }, { threshold: 0.1 });
+                
+                cards.forEach(card => observer.observe(card));
+            }
+            
+            // 页面加载完成后执行
+            window.addEventListener('load', addFadeInEffect);
+        </script>
+        
+            
+        <script>
+        window.onload = init;
+        function init() {
+            let renderer, canvas;
+            const dpr = Math.max(1, .5*devicePixelRatio);
+            
+            // 创建背景画布
+            canvas = document.createElement("canvas");
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.zIndex = '-1';
+            document.body.insertBefore(canvas, document.body.firstChild);
+            
+            const resize = () => {
+                const { innerWidth: width, innerHeight: height } = window;
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+                if (renderer) {
+                    renderer.updateScale(dpr);
+                }
+            };
+            
+            const source = document.querySelector("script[type='x-shader/x-fragment']").textContent;
+            canvas.style.userSelect = "none";
+            renderer = new Renderer(canvas, dpr);
+            renderer.setup();
+            renderer.init();
+            resize();
+            if (renderer.test(source) === null) {
+                renderer.updateShader(source);
+            }
+            window.onresize = resize;
+            const loop = (now) => {
+                renderer.render(now);
+                requestAnimationFrame(loop);
+            };
+            loop(0);
+        }
+        
+        class Renderer {
+            #vertexSrc = "#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}";
+            #fragmtSrc = "#version 300 es\nprecision highp float;\nout vec4 O;\nuniform float time;\nuniform vec2 resolution;\nvoid main() {\n\tvec2 uv=gl_FragCoord.xy/resolution;\n\tO=vec4(uv,sin(time)*.5+.5,1);\n}";
+            #vertices = [-1, 1, -1, -1, 1, 1, 1, -1];
+            
+            constructor(canvas, scale) {
+                this.canvas = canvas;
+                this.scale = scale;
+                this.gl = canvas.getContext("webgl2");
+                this.gl.viewport(0, 0, canvas.width * scale, canvas.height * scale);
+                this.shaderSource = this.#fragmtSrc;
+                this.mouseCoords = [0, 0];
+                this.pointerCoords = [0, 0];
+                this.nbrOfPointers = 0;
+            }
+            
+            // ... [这里是 Renderer 类的其余方法，与您提供的代码相同]
+        }
+        </script>
+        
+        </body>
+        </html>
+        

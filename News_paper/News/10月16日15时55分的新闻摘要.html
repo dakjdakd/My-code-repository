@@ -1,0 +1,546 @@
+
+    <!DOCTYPE html>
+    <html lang="zh-CN">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>新闻摘要</title>
+        
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap');
+        
+        :root {
+            --x: 0;
+            --y: 0;
+            --bg-color: #f0f2f5;
+            --grid-color: rgba(0, 0, 0, 0.1);
+            --grid-size: 40px;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-image: 
+                linear-gradient(var(--grid-color) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+            background-size: var(--grid-size) var(--grid-size);
+            background-position: 0 0, 0 0;
+            background-attachment: fixed;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at 50% 50%, transparent 0%, var(--bg-color) 100%);
+            z-index: 1;
+            pointer-events: none;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            position: relative;
+            z-index: 2;
+        }
+        
+        h1, h2, h3 {
+            color: #2c3e50;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        h1 {
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+            font-size: 2.5em;
+            text-align: center;
+        }
+        
+        h2 {
+            border-bottom: 1px solid #bdc3c7;
+            padding-bottom: 5px;
+            font-size: 2em;
+        }
+        
+        h3 {
+            color: #16a085;
+            font-size: 1.5em;
+        }
+        
+        p {
+            margin-bottom: 15px;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        
+        a {
+            color: #3498db;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        a:hover {
+            color: #2980b9;
+            text-decoration: underline;
+        }
+        
+        .meta-info {
+            background-color: #ecf0f1;
+            border-radius: 5px;
+            padding: 15px;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #7f8c8d;
+            transition: all 0.3s ease;
+        }
+        
+        .meta-info p {
+            margin: 5px 0;
+        }
+        
+        .dark-mode {
+            --bg-color: #121212;
+            --grid-color: rgba(255, 255, 255, 0.1);
+            color: #e0e0e0;
+        }
+        
+        .dark-mode .container {
+            background-color: #1e1e1e;
+            box-shadow: 0 0 20px rgba(255,255,255,0.05);
+        }
+        
+        .dark-mode h1, .dark-mode h2, .dark-mode h3 {
+            color: #64b5f6;
+        }
+        
+        .dark-mode a {
+            color: #90caf9;
+        }
+        
+        .dark-mode .meta-info {
+            background-color: #2c2c2c;
+            color: #b0b0b0;
+        }
+        
+        .dark-mode p {
+            color: #e0e0e0;
+        }
+        
+        #darkModeToggle {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: #3498db;
+            color: #ffffff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 4;
+        }
+        
+        #darkModeToggle:hover {
+            background-color: #2980b9;
+        }
+        
+        .dark-mode #darkModeToggle {
+            background-color: #3498db;
+            color: #ffffff;
+        }
+        
+        .dark-mode .card,
+        .dark-mode .assets,
+        .dark-mode .card-content {
+            filter: none;
+        }
+        
+        .dark-mode .assets h3 {
+            color: white;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                margin: 20px;
+                padding: 15px;
+            }
+            h1 { font-size: 2em; }
+            h2 { font-size: 1.5em; }
+            h3 { font-size: 1.2em; }
+        }
+        
+        .card {
+            width: 600px;
+            aspect-ratio: 2 / 1.1;
+            max-height: calc(100vh - 2rem);
+            position: relative;
+            overflow: hidden;
+            max-width: calc(100% - 2rem);
+            margin: 20px auto;
+            z-index: 3;
+        }
+        
+        .assets {
+            position: absolute;
+            inset: 0;
+            border-radius: 4em;
+            overflow: hidden;
+        }
+        
+        .assets > img {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            translate: -50% 0;
+            height: 100%;
+            width: 660px;
+            object-fit: cover;
+            object-position: center 43%;
+            user-select: none;
+            pointer-events: none;
+        }
+        
+        .assets > img:first-of-type {
+            filter: saturate(1.5) brightness(0.9);
+            object-position: calc(-50% + (var(--x) * 30px)) calc(43% + (var(--y) * -20px));
+        }
+        
+        .assets > img:last-of-type {
+            object-position: calc(-50% + (var(--x) * 40px)) calc(43% + (var(--y) * -40px));
+        }
+        
+        .assets h3 {
+            position: absolute;
+            left: 50%;
+            top: 6%;
+            margin: 0;
+            font-size: 8rem;
+            translate: -50% 0;
+            text-transform: uppercase;
+            font-family: 'Bebas Neue', sans-serif;
+            color: white;
+            translate: calc(-50% + (var(--x) * -30px)) calc(var(--y) * -20px);
+        }
+        
+        .card-content {
+            min-height: 32%;
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            color: white;
+            display: grid;
+            gap: 0.2rem;
+            place-items: center;
+            align-content: center;
+            padding-bottom: 0.5rem;
+            z-index: 2;
+        }
+        
+        .card-content svg {
+            width: 20px;
+        }
+        
+        .card-content p {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1.2rem;
+            position: relative;
+        }
+        
+        .card-content p:first-of-type::after {
+            content: '';
+            position: absolute;
+            bottom: calc(100% + 1rem);
+            left: 50%;
+            width: 6ch;
+            background: white;
+            height: 1px;
+            translate: -50% 0;
+        }
+        
+        .card-content p:last-of-type {
+            opacity: 0.8;
+        }
+        
+        .blur {
+            --layers: 5;
+            position: absolute;
+            inset: 0;
+        }
+        
+        .blur .layer {
+            --blur: calc(
+                sin(((var(--layers) - var(--index)) / var(--layers)) * 90deg) * 30
+            );
+            --stop: calc(
+                sin(((var(--index)) / var(--layers)) * 90deg) * 15
+            );
+            position: absolute;
+            inset: 0;
+            background: hsl(0 0% 60% / 0.05);
+            backdrop-filter: blur(calc(var(--blur) * 1px));
+            mask: radial-gradient(
+                150% 130% at 45% 90%,
+                #fff 15%,
+                #0000 calc((15 + var(--stop)) * 1%)
+            );
+        }
+    </style>
+    
+    </head>
+    <body>
+        <button id="darkModeToggle" onclick="toggleDarkMode()">切换到深色模式</button>
+        <div class="card">
+            <div class="assets">
+                <img src="https://assets.codepen.io/605876/do-not-copy-osaka-sky.jpeg" alt="" />
+                <h3>新闻摘要</h3>
+                <img src="https://assets.codepen.io/605876/do-not-copy-osaka-tower.png" alt="" />
+            </div>
+            <div class="blur">
+                <div class="layer" style="--index:1;"></div>
+                <div class="layer" style="--index:2;"></div>
+                <div class="layer" style="--index:3;"></div>
+                <div class="layer" style="--index:4;"></div>
+                <div class="layer" style="--index:5;"></div>
+            </div>
+            <div class="card-content">
+                <p>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-6 h-6">
+                        <path d="M15.75 8.25a.75.75 0 0 1 .75.75c0 1.12-.492 2.126-1.27 2.812a.75.75 0 1 1-.992-1.124A2.243 2.243 0 0 0 15 9a.75.75 0 0 1 .75-.75Z" />
+                        <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM4.575 15.6a8.25 8.25 0 0 0 9.348 4.425 1.966 1.966 0 0 0-1.84-1.275.983.983 0 0 1-.97-.822l-.073-.437c-.094-.565.25-1.11.8-1.267l.99-.282c.427-.123.783-.418.982-.816l.036-.073a1.453 1.453 0 0 1 2.328-.377L16.5 15h.628a2.25 2.25 0 0 1 1.983 1.186 8.25 8.25 0 0 0-6.345-12.4c.044.262.18.503.389.676l1.068.89c.442.369.535 1.01.216 1.49l-.51.766a2.25 2.25 0 0 1-1.161.886l-.143.048a1.107 1.107 0 0 0-.57 1.664c.369.555.169 1.307-.427 1.605L9 13.125l.423 1.059a.956.956 0 0 1-1.652.928l-.679-.906a1.125 1.125 0 0 0-1.906.172L4.575 15.6Z" clip-rule="evenodd" />
+                    </svg>
+                    <span>今日热点</span>
+                </p>
+                <p>2024-10-16</p>
+            </div>
+        </div>
+        <div class="container">
+            <h2>Latest News Summary</h2>
+
+<h3>BBC News</h3>
+
+<ol>
+<li><p><strong>Families 'left in lurch' on child autism diagnoses, report warns</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Support services are failing to meet high demand, says the Children's Commissioner for England.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cy435yk4vj4o">Read More</a></li>
+</ul></li>
+<li><p><strong>Mrs Brown's Boys star sorry for 'clumsy' racial joke</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> The show's creator apologizes for a "clumsy attempt at a joke" during a Christmas show rehearsal.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/czxdepy593yo">Read More</a></li>
+</ul></li>
+<li><p><strong>Unemployment rate dips as pay growth slows</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> The jobless rate fell to 4% between June and August, official figures show.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/ce3w7dqn454o">Read More</a></li>
+</ul></li>
+<li><p><strong>Obesity: Jobless could get weight loss jabs to return to work</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> The health secretary announces trials to explore the effect of weight loss drugs on worklessness.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cjd54zd0ezjo">Read More</a></li>
+</ul></li>
+<li><p><strong>Burning household rubbish now UK’s dirtiest form of power, BBC finds</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Nearly half of waste is burned for energy, but BBC analysis finds it is as dirty as coal.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cp3wxgje5pwo">Read More</a></li>
+</ul></li>
+<li><p><strong>Harris courts black and Latino votes as polls suggest Trump gains</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Recent polling indicates Trump is gaining with both groups, partly due to his economic message.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cm24g1nj364o">Read More</a></li>
+</ul></li>
+<li><p><strong>Generation Z drinking alcohol in moderation or quitting</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Many in Generation Z are reducing or quitting alcohol consumption.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cvgd0x7jlv5o">Read More</a></li>
+</ul></li>
+<li><p><strong>Boba tea company apologises over Canada Dragon's Den row</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Marvel actor Simu Liu accused Canadian entrepreneurs of culturally appropriating the Taiwanese drink.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/c3wp0175w9xo">Read More</a></li>
+</ul></li>
+<li><p><strong>Newspaper headlines: 'Prepare for higher taxes' and 'I legally punished' Sara</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Some papers lead on the chancellor's hint that business taxes will rise.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cvgd9n2lqz5o">Read More</a></li>
+</ul></li>
+<li><p><strong>Al Pacino says 'it's fun' to be a new dad at 84</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> The Hollywood star discusses fatherhood, The Godfather, and playing chess.</li>
+<li><a href="https://www.bbc.co.uk/news/articles/cdenwk7p9z1o">Read More</a></li>
+</ul></li>
+</ol>
+
+<h3>The Verge News</h3>
+
+<ol start="12">
+<li><p><strong>Pokémon developer faces major data leak</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Game Freak confirms a major data leak, including employee info and game source code.</li>
+<li><a href="http://www.theverge.com/2024/10/14/24270226/pokemon-game-freak-data-leak-confirmed">Read More</a></li>
+</ul></li>
+<li><p><strong>Destiny: Rising is a new mobile RPG shooter set in Bungie’s Destiny universe</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> NetEase introduces a new Destiny mobile game set before Guardians existed.</li>
+<li><a href="http://www.theverge.com/2024/10/14/24269790/destiny-rising-mobile-rpg-shooter">Read More</a></li>
+</ul></li>
+<li><p><strong>Adobe Max 2024: All the major announcements around design and AI</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Key announcements from Adobe Max, including a new Firefly AI video model and Creative Cloud updates.</li>
+<li><a href="http://www.theverge.com/2024/10/14/24269859/adobe-max-2024-major-announcements-stream">Read More</a></li>
+</ul></li>
+<li><p><strong>Adobe’s AI video model is here, and it’s already inside Premiere Pro</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Adobe's Firefly Video AI generation model launches, integrated into Premiere Pro.</li>
+<li><a href="http://www.theverge.com/2024/10/14/24268695/adobe-ai-video-generation-firefly-model-premiere-pro">Read More</a></li>
+</ul></li>
+<li><p><strong>The Internet Archive is back as a read-only service after cyberattacks</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> The Internet Archive returns online in a read-only state following recent cyberattacks.</li>
+<li><a href="http://www.theverge.com/2024/10/14/24269741/internet-archive-online-read-only-data-breach-outage">Read More</a></li>
+</ul></li>
+<li><p><strong>The Optimus robots at Tesla’s Cybercab event were humans in disguise</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Tesla's Optimus robots were controlled by humans at the Cybercab reveal event.</li>
+<li><a href="http://www.theverge.com/2024/10/13/24269131/tesla-optimus-robots-human-controlled-cybercab-we-robot-event">Read More</a></li>
+</ul></li>
+<li><p><strong>How Twin Tour Golf became minigolf sensations on TikTok</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> The brothers behind Twin Tour Golf discuss their rise as minigolf creators on social media.</li>
+<li><a href="http://www.theverge.com/2024/10/13/24267880/mini-golf-twin-tour-tiktok-sanicki-vergecast">Read More</a></li>
+</ul></li>
+<li><p><strong>With Nintendo’s Alarmo, we can all wake up like Mario</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Nintendo's Alarmo and other tech news in this week’s Installer newsletter.</li>
+<li><a href="http://www.theverge.com/2024/10/13/24268065/nintendo-alarmo-money-electric-onedrive-mastodon-installer">Read More</a></li>
+</ul></li>
+<li><p><strong>How the government plans to break up Google’s monopoly</strong></p>
+
+<ul>
+<li><strong>Highlight:</strong> Insights on potential government actions to break up Google's monopoly.</li>
+<li><a href="http://www.theverge.com/2024/10/11/24267716/google-breakup-antitrust-tesla-cybercab-vergecast">Read More</a></li>
+</ul></li>
+</ol>
+
+<h3>Notable Trends</h3>
+
+<ul>
+<li><strong>Health and Social Issues:</strong> Concerns over autism diagnoses, obesity treatments, and Generation Z's drinking habits.</li>
+<li><strong>Technology and Data Security:</strong> Major data leaks, AI advancements, and cyberattacks on key online services.</li>
+<li><strong>Entertainment and Media:</strong> Controversies in TV shows, new gaming developments, and celebrity news.</li>
+<li><strong>Economic and Political Developments:</strong> Unemployment rates, tax implications, and political strategies targeting specific voter groups.</li>
+</ul>
+
+<p>This summary provides a structured overview of the day's top news, ensuring key insights are captured and easily accessible.</p>
+
+            <div class="meta-info">
+                <p>程序开始运行时间: 2024-10-16 15:55:07</p>
+                <p>程序结束运行时间: 2024-10-16 15:57:37</p>
+                <p>整个运行过程使用了 149.87 秒</p>
+                <p>本次程序运行使用的模型: glm-4-plus</p>
+            </div>
+        </div>
+        
+    <script src="https://cdn.skypack.dev/gsap@3.12.0"></script>
+    <script>
+    function toggleDarkMode() {
+        const body = document.body;
+        const button = document.getElementById('darkModeToggle');
+        body.classList.toggle('dark-mode');
+        if (body.classList.contains('dark-mode')) {
+            button.textContent = '切换到浅色模式';
+        } else {
+            button.textContent = '切换到深色模式';
+        }
+    }
+
+    function smoothScroll(target) {
+        const element = document.querySelector(target);
+        window.scrollTo({
+            top: element.offsetTop,
+            behavior: 'smooth'
+        });
+    }
+
+    const UPDATE = ({ x, y }) => {
+      gsap.set(document.documentElement, {
+        '--x': gsap.utils.mapRange(0, window.innerWidth, -1, 1, x),
+        '--y': gsap.utils.mapRange(0, window.innerHeight, -1, 1, y),
+      })
+    }
+
+    window.addEventListener('mousemove', UPDATE)
+
+    const handleOrientation = ({ beta, gamma }) => {
+      const isLandscape = window.matchMedia('(orientation: landscape)').matches
+      gsap.set(document.documentElement, {
+        '--x': gsap.utils.clamp(-1, 1, isLandscape ? gsap.utils.mapRange(-45, 45, -1, 1, beta) : gsap.utils.mapRange(-45, 45, -1, 1, gamma)),
+        '--y': gsap.utils.clamp(-1, 1, isLandscape ? gsap.utils.mapRange(20, 70, 1, -1, Math.abs(gamma)) : gsap.utils.mapRange(20, 70, 1, -1, beta)),
+      })
+    }
+
+    const START = () => {
+      if (
+        DeviceOrientationEvent?.requestPermission
+      ) {
+        Promise.all([
+          DeviceOrientationEvent.requestPermission(),
+        ]).then((results) => {
+          if (results.every((result) => result === "granted")) {
+            window.addEventListener("deviceorientation", handleOrientation);
+          }
+        });
+      } else {
+        window.addEventListener("deviceorientation", handleOrientation);
+      }
+    };
+    document.body.addEventListener('click', START, { once: true })
+    </script>
+    
+    </body>
+    </html>
+    

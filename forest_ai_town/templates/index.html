@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>古代遗迹探险</title>
+    <style>
+        /* 基础样式 */
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            background: url('/static/images/1.png') no-repeat center center;
+            background-size: cover;
+            font-family: 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+        }
+
+        /* 环境效果 */
+        .environment {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .fog {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.2));
+            opacity: 0;
+            transition: opacity 2s;
+        }
+
+        /* 状态面板 */
+        .status-panel {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            width: 200px;
+        }
+
+        .status-item {
+            margin: 5px 0;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+        }
+
+        /* 物品栏 */
+        .inventory {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            color: white;
+            width: 200px;
+        }
+
+        .inventory-item {
+            margin: 5px 0;
+            padding: 5px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .inventory-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* 历史记录 */
+        .history-box {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 60%;
+            max-height: 40vh;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 15px;
+            color: white;
+            overflow-y: auto;
+            scrollbar-width: thin;
+            scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+        }
+
+        .history-box p {
+            margin: 8px 0;
+            padding: 8px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        /* 角色样式 */
+        .characters {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            height: 40vh;
+            padding: 0 50px;
+            box-sizing: border-box;
+        }
+
+        .character {
+            position: absolute;
+            bottom: 20px;
+            transition: all 0.8s ease;
+        }
+
+        .character-container {
+            position: relative;
+            text-align: center;
+        }
+
+        .character img {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            border: 4px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+            transition: all 0.3s;
+        }
+
+        .character:hover img {
+            transform: scale(1.1);
+            border-color: gold;
+        }
+
+        /* 角色状态指示器 */
+        .character-status {
+            position: absolute;
+            top: -30px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 5px 10px;
+            border-radius: 10px;
+            color: white;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .character:hover .character-status {
+            opacity: 1;
+        }
+
+        /* 对话气泡 */
+        .speech-bubble {
+            position: absolute;
+            bottom: 140px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 15px;
+            border-radius: 15px;
+            min-width: 200px;
+            max-width: 300px;
+            opacity: 0;
+            transition: all 0.5s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: 10px solid transparent;
+            border-top-color: rgba(255, 255, 255, 0.95);
+        }
+
+        .speech-bubble.active {
+            opacity: 1;
+            transform: translateX(-50%) translateY(-10px);
+        }
+
+        /* 控制面板 */
+        .control-panel {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .control-btn {
+            padding: 10px 20px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 0, 0, 0.9);
+            border-color: gold;
+        }
+
+        /* 进度指示器 */
+        .progress-bar {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 50%;
+            height: 10px;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 5px;
+            overflow: hidden;
+        }
+
+        .progress {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, #4CAF50, #8BC34A);
+            transition: width 0.3s;
+        }
+
+        /* 添加新的样式 */
+        .history-box {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .history-box p {
+            margin: 10px 0;
+            padding: 12px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            transition: all 0.3s;
+        }
+
+        .history-box p:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .status-panel {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .status-panel h3 {
+            color: #4CAF50;
+            margin-bottom: 15px;
+            text-align: center;
+            font-size: 1.2em;
+        }
+
+        .status-item {
+            background: rgba(255, 255, 255, 0.05);
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #4CAF50;
+            transition: all 0.3s;
+        }
+
+        .status-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+        }
+
+        .inventory {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .inventory h3 {
+            color: #FFD700;
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .inventory-item {
+            background: rgba(255, 255, 255, 0.05);
+            margin: 8px 0;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 3px solid #FFD700;
+            transition: all 0.3s;
+        }
+
+        .inventory-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: translateX(5px);
+            border-left-color: #FFA500;
+        }
+
+        .character img {
+            border: 4px solid rgba(255, 255, 255, 0.8);
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.5);
+            transition: all 0.4s ease;
+        }
+
+        .character:hover img {
+            transform: scale(1.1) translateY(-10px);
+            border-color: #FFD700;
+            box-shadow: 0 0 40px rgba(255, 215, 0, 0.3);
+        }
+
+        .character .name {
+            color: white;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+            font-weight: bold;
+            margin-top: 10px;
+            font-size: 1.1em;
+            opacity: 0.9;
+            transition: all 0.3s;
+        }
+
+        .character:hover .name {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        .speech-bubble {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+            font-size: 0.95em;
+            line-height: 1.5;
+            transform-origin: bottom center;
+        }
+
+        .speech-bubble.active {
+            animation: popIn 0.5s ease-out;
+        }
+
+        @keyframes popIn {
+            0% { transform: translateX(-50%) translateY(20px) scale(0.8); opacity: 0; }
+            50% { transform: translateX(-50%) translateY(-15px) scale(1.1); }
+            100% { transform: translateX(-50%) translateY(-10px) scale(1); opacity: 1; }
+        }
+
+        .control-btn {
+            background: rgba(0, 0, 0, 0.85);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 25px;
+            font-size: 0.9em;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            transition: all 0.3s;
+        }
+
+        .control-btn:hover {
+            background: rgba(0, 0, 0, 0.95);
+            border-color: #FFD700;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .progress-bar {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            height: 12px;
+        }
+
+        .progress {
+            background: linear-gradient(90deg, #4CAF50, #8BC34A, #CDDC39);
+            box-shadow: 0 0 10px rgba(76, 175, 80, 0.5);
+            transition: width 0.5s ease;
+        }
+
+        .character.moving {
+            animation: characterMove 0.5s infinite alternate ease-in-out;
+        }
+
+        @keyframes characterMove {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-5px); }
+        }
+
+        .fog {
+            background: linear-gradient(transparent, rgba(255,255,255,0.2));
+            animation: fogMove 20s infinite alternate ease-in-out;
+        }
+
+        @keyframes fogMove {
+            0% { opacity: 0; transform: translateY(0); }
+            50% { opacity: 0.3; transform: translateY(-10px); }
+            100% { opacity: 0; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <!-- 环境效果 -->
+    <div class="environment">
+        <div class="fog"></div>
+    </div>
+
+    <!-- 进度条 -->
+    <div class="progress-bar">
+        <div class="progress" id="progress"></div>
+    </div>
+
+    <!-- 状态面板 -->
+    <div class="status-panel">
+        <h3>探险状态</h3>
+        <div class="status-item">探索进度: <span id="exploration">0</span>%</div>
+        <div class="status-item">发现线索: <span id="clues">0</span></div>
+        <div class="status-item">当前位置: <span id="location">森林入口</span></div>
+    </div>
+
+    <!-- 物品栏 -->
+    <div class="inventory">
+        <h3>探险物品</h3>
+        <div class="inventory-item">🗺️ 古老的地图</div>
+        <div class="inventory-item">📜 神秘符文</div>
+        <div class="inventory-item">🔦 探照灯</div>
+        <div class="inventory-item">⛏️ 考古工具</div>
+    </div>
+
+    <!-- 历史记录 -->
+    <div class="history-box" id="historyBox">
+        {% for message in messages %}
+            <p><strong>{{ message.speaker }}：</strong>{{ message.content }}</p>
+        {% endfor %}
+    </div>
+
+    <!-- 角色区域 -->
+    <div class="characters">
+        <div class="character" id="char1">
+            <div class="character-container">
+                <div class="character-status">状态: 探索中</div>
+                <div class="speech-bubble"></div>
+                <img src="/static/images/2.jpg" alt="艾米">
+                <div class="name">艾米</div>
+            </div>
+        </div>
+        <div class="character" id="char2">
+            <div class="character-container">
+                <div class="character-status">状态: 警戒中</div>
+                <div class="speech-bubble"></div>
+                <img src="/static/images/3.jpg" alt="杰克">
+                <div class="name">杰克</div>
+            </div>
+        </div>
+        <div class="character" id="char3">
+            <div class="character-container">
+                <div class="character-status">状态: 研究中</div>
+                <div class="speech-bubble"></div>
+                <img src="/static/images/4.jpg" alt="莉莉">
+                <div class="name">莉莉</div>
+            </div>
+        </div>
+        <div class="character" id="char4">
+            <div class="character-container">
+                <div class="character-status">状态: 记录中</div>
+                <div class="speech-bubble"></div>
+                <img src="/static/images/5.jpg" alt="汤姆">
+                <div class="name">汤姆</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 控制面板 -->
+    <div class="control-panel">
+        <button class="control-btn" onclick="toggleFog()">切换迷雾</button>
+        <button class="control-btn" onclick="gatherTeam()">召集队伍</button>
+        <button class="control-btn" onclick="disperseTeam()">探索周围</button>
+    </div>
+
+    <script>
+        const characters = ['艾米', '杰克', '莉莉', '汤姆'];
+        let allMessages = [];
+        const positions = {
+            '艾米': 150,
+            '杰克': window.innerWidth * 0.33 + 150,
+            '莉莉': window.innerWidth * 0.66 + 150,
+            '汤姆': window.innerWidth - 150
+        };
+        
+        function randomMove(character) {
+            const char = document.querySelector(`#char${characters.indexOf(character) + 1}`);
+            const container = document.querySelector('.characters');
+            const containerRect = container.getBoundingClientRect();
+            
+            // 计算安全移动范围
+            const minX = 100; // 左边界
+            const maxX = containerRect.width - 100; // 右边界
+            const minY = 20; // 下边界
+            const maxY = containerRect.height - 200; // 上边界（避开历史框）
+            
+            // 生成随机位置
+            const newX = Math.random() * (maxX - minX) + minX;
+            const newY = Math.random() * (maxY - minY) + minY;
+            
+            // 应用新位置
+            char.style.left = `${newX}px`;
+            char.style.bottom = `${newY}px`;
+            
+            // 更新位置记录
+            positions[character] = newX;
+        }
+        
+        function moveCharacter(fromName, toName, content) {
+            const fromChar = document.querySelector(`#char${characters.indexOf(fromName) + 1}`);
+            const toChar = document.querySelector(`#char${characters.indexOf(toName) + 1}`);
+            const toPosition = parseInt(toChar.style.left);
+            
+            // 添加移动动画类
+            fromChar.classList.add('moving');
+            
+            // 计算目标位置（保持一定距离）
+            const targetX = toPosition - 100; // 保持100px的距离
+            
+            // 确保不会移出屏幕
+            const safeX = Math.max(100, Math.min(window.innerWidth - 100, targetX));
+            
+            // 移动到目标角色旁边
+            fromChar.style.left = `${safeX}px`;
+            
+            // 更新位置记录
+            positions[fromName] = safeX;
+            
+            // 显示对话气泡
+            setTimeout(() => {
+                const bubble = fromChar.querySelector('.speech-bubble');
+                bubble.textContent = content;
+                bubble.classList.add('active');
+                
+                // 3秒后隐藏气泡并随机移动
+                setTimeout(() => {
+                    bubble.classList.remove('active');
+                    fromChar.classList.remove('moving');
+                    // 所有角色随机移动
+                    characters.forEach(char => {
+                        if (Math.random() > 0.5) { // 50%的概率移动
+                            randomMove(char);
+                        }
+                    });
+                }, 3000);
+            }, 1000);
+        }
+        
+        function findTargetCharacter(message) {
+            const content = message.split('：')[1];
+            for (let char of characters) {
+                if (content.includes(char)) {
+                    return char;
+                }
+            }
+            return null;
+        }
+        
+        function updateChat() {
+            fetch('/update')
+                .then(response => response.json())
+                .then(data => {
+                    // 更新所有消息历史
+                    allMessages = data.messages;
+                    
+                    // 更新历史记录框
+                    const historyBox = document.getElementById('historyBox');
+                    historyBox.innerHTML = allMessages.map(msg => {
+                        return `<p><strong>${msg.speaker}：</strong>${msg.content}</p>`;
+                    }).join('');
+                    historyBox.scrollTop = historyBox.scrollHeight;
+                    
+                    // 清除所有活跃的气泡
+                    document.querySelectorAll('.speech-bubble').forEach(bubble => {
+                        bubble.classList.remove('active');
+                    });
+                    
+                    // 获取最新的消息
+                    const latestMessage = allMessages[allMessages.length - 1];
+                    if (latestMessage) {
+                        const targetChar = findTargetCharacter(latestMessage.content);
+                        const charIndex = characters.indexOf(latestMessage.speaker);
+                        
+                        if (targetChar) {
+                            moveCharacter(latestMessage.speaker, targetChar, latestMessage.content);
+                        } else {
+                            if (charIndex !== -1) {
+                                const bubble = document.querySelector(`#char${charIndex + 1} .speech-bubble`);
+                                bubble.textContent = latestMessage.content;
+                                bubble.classList.add('active');
+                                
+                                setTimeout(() => {
+                                    bubble.classList.remove('active');
+                                    characters.forEach(char => {
+                                        if (Math.random() > 0.5) {
+                                            randomMove(char);
+                                        }
+                                    });
+                                }, 3000);
+                            }
+                        }
+                    }
+                });
+        }
+
+        // 初始化时设置响应式位置
+        window.addEventListener('resize', () => {
+            positions['杰克'] = window.innerWidth * 0.33 + 150;
+            positions['莉莉'] = window.innerWidth * 0.66 + 150;
+            positions['汤姆'] = window.innerWidth - 150;
+        });
+
+        // 每6秒更新一次对
+        setInterval(updateChat, 6000);
+        updateChat(); // 初始加载
+
+        // 添加新的交互功能
+        let progress = 0;
+        let fogEnabled = false;
+
+        function toggleFog() {
+            fogEnabled = !fogEnabled;
+            document.querySelector('.fog').style.opacity = fogEnabled ? '0.5' : '0';
+        }
+
+        function updateProgress() {
+            progress = Math.min(100, progress + Math.random() * 5);
+            document.getElementById('progress').style.width = progress + '%';
+            document.getElementById('exploration').textContent = Math.floor(progress);
+        }
+
+        function gatherTeam() {
+            const centerX = window.innerWidth / 2;
+            characters.forEach((char, index) => {
+                const element = document.querySelector(`#char${index + 1}`);
+                element.style.left = (centerX - 200 + index * 100) + 'px';
+                element.style.bottom = '50px';
+            });
+        }
+
+        function disperseTeam() {
+            characters.forEach(char => {
+                randomMove(char);
+            });
+        }
+
+        // 定期更新进度
+        setInterval(updateProgress, 10000);
+    </script>
+</body>
+</html> 
