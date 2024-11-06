@@ -1,12 +1,13 @@
-import markdown2
-import re
-from config import OUTPUT_BASE_NAME, MODEL_NAME
-from datetime import datetime
 
-class HTMLGenerator:
-    @staticmethod
-    def get_css():
-        return """
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="icon" type="image/png" href="../assets/favicon.png">
+            <title>🎧Raddit_AI_search🎧</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+            
         <style>
             :root {
                 --primary-color: #4a4a4a;
@@ -769,135 +770,8 @@ class HTMLGenerator:
                 transform: scale(1.2) rotate(10deg);
             }
         </style>
-        """
-
-    @staticmethod
-    def get_javascript():
-        return """
-        <script>
-            document.addEventListener('DOMContentLoaded', function() {{
-                // 暗色模式切换功能
-                const darkModeToggle = document.getElementById('darkModeToggle');
-                if (darkModeToggle) {{
-                    darkModeToggle.addEventListener('click', function() {{
-                        document.body.classList.toggle('dark-mode');
-                        this.textContent = document.body.classList.contains('dark-mode') 
-                            ? '切换到亮色模式' 
-                            : '切换到暗色模式';
-                    }});
-                }}
-
-                // 目录功能
-                const tocToggle = document.querySelector('.toc-toggle');
-                const toc = document.querySelector('.toc');
-                
-                if (tocToggle && toc) {{
-                    tocToggle.addEventListener('click', function() {{
-                        toc.classList.toggle('visible');
-                    }});
-                }}
-                
-                // 生成目录内容
-                function generateToc() {{
-                    const headings = document.querySelectorAll('.card h2');
-                    const tocList = document.querySelector('.toc-list');
-                    
-                    if (!tocList) return;
-                    
-                    tocList.innerHTML = '';
-                    
-                    headings.forEach((heading, index) => {{
-                        heading.id = `heading-${{index}}`;
-                        
-                        const li = document.createElement('li');
-                        li.classList.add('toc-item');
-                        
-                        const a = document.createElement('a');
-                        a.href = `#heading-${{index}}`;
-                        a.textContent = heading.textContent;
-                        a.addEventListener('click', function(e) {{
-                            e.preventDefault();
-                            heading.scrollIntoView({{ behavior: 'smooth' }});
-                        }});
-                        
-                        li.appendChild(a);
-                        tocList.appendChild(li);
-                    }});
-                }}
-                
-                // 更新目录激活状态
-                function updateTocActiveState() {{
-                    const headings = document.querySelectorAll('.card h2');
-                    const tocItems = document.querySelectorAll('.toc-item');
-                    
-                    headings.forEach((heading, index) => {{
-                        const rect = heading.getBoundingClientRect();
-                        if (rect.top >= 0 && rect.top <= window.innerHeight * 0.5) {{
-                            tocItems.forEach(item => item.classList.remove('active'));
-                            tocItems[index].classList.add('active');
-                        }}
-                    }});
-                }}
-                
-                generateToc();
-                window.addEventListener('scroll', updateTocActiveState);
-            }});
-
-            // 平滑滚动
-            document.querySelectorAll('a[href^="#"]').forEach(anchor => {{
-                anchor.addEventListener('click', function (e) {{
-                    e.preventDefault();
-                    document.querySelector(this.getAttribute('href')).scrollIntoView({{
-                        behavior: 'smooth'
-                    }});
-                }});
-            }});
+        
             
-            // 添加淡入效果
-            function addFadeInEffect() {{
-                const cards = document.querySelectorAll('.card');
-                const observer = new IntersectionObserver((entries) => {{
-                    entries.forEach(entry => {{
-                        if (entry.isIntersecting) {{
-                            entry.target.classList.add('fade-in');
-                            observer.unobserve(entry.target);
-                        }}
-                    }});
-                }}, {{ threshold: 0.1 }});
-                
-                cards.forEach(card => observer.observe(card));
-            }}
-            
-            window.addEventListener('load', addFadeInEffect);
-
-            // 返回顶部功能和进度条
-            const backToTop = document.querySelector('.back-to-top');
-            window.addEventListener('scroll', () => {{
-                if (window.scrollY > 300) {{
-                    backToTop.classList.add('visible');
-                }} else {{
-                    backToTop.classList.remove('visible');
-                }}
-                
-                const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                const scrolled = (winScroll / height) * 100;
-                document.querySelector('.progress-bar').style.width = scrolled + '%';
-            }});
-
-            // 返回顶部点击事件
-            document.querySelector('.back-to-top').addEventListener('click', () => {{
-                window.scrollTo({{
-                    top: 0,
-                    behavior: 'smooth'
-                }});
-            }});
-        </script>
-    """
-
-    @staticmethod
-    def get_shader():
-        return """
         <script type="x-shader/x-fragment">#version 300 es
         precision highp float;
         out vec4 O;
@@ -932,11 +806,265 @@ class HTMLGenerator:
             col+=pattern(uv*s);
             O=vec4(col,1);
         }</script>
-        """
+        
+        </head>
+        <body>
+            <div class="progress-bar"></div>
+            <div class="toc-toggle">
+                <i class="fas fa-list"></i>
+            </div>
+            <nav class="toc">
+                <ul class="toc-list"></ul>
+            </nav>
+            <header>
+                <h1>🚀 Reddit AI 探索者 🤖</h1>
+                <button id="darkModeToggle">切换到暗色模式</button>
+            </header>
+            <div class="container">
+                <div class="main-title">
+                    <span class="emoji">🌟</span>
+                    <h2>AI's Wild West: The Latest Frontier in Tech-savvy Shenanigans</h2>
+                    <span class="emoji">✨</span>
+                </div>
+                <div class='container main-content'><div class='content-section'><div class='card'><h2>AI's Wild West: Unwrapping the Latest Tech Treasures 🤠🌟</h2>
+<p>Imagine stepping into a saloon where the drinks are neural networks, and the poker game is a showdown of AI models. Welcome to the wild world of AI innovation, where the chips are algorithms and the stakes are as high as the tallest skyscraper made of code! 🎩🃏</p>
+</div><div class='card'><h2>1. <strong>SORA incoming??</strong> 🚀</h2>
+<ul>
+<li>Reddit: <a href="https://i.redd.it/ghk29jhei6zd1.jpeg">Link to post</a></li>
+<li>Facts: Sora is the new kid on the AI block, stirring up a mix of excitement and skepticism. Some folks are buzzing about its potential, while others are raising an eyebrow at the company's promises.</li>
+<li>Personal thoughts: Sora could be the next big thing or just a flash in the pan. Either way, it's got the community talking, and that's half the fun!</li>
+<li>Description: With whispers of a new video model in the works, Sora might just shake up the AI scene. Keep your eyes peeled!</li>
+</ul>
+</div><div class='card'><h2>2. <strong>Qwen 2.5 on official LiveCodeBench leaderboard</strong> 🧠</h2>
+<ul>
+<li>Reddit: <a href="https://i.redd.it/w0cbtmg6h6zd1.png">Link to post</a></li>
+<li>Facts: Qwen 2.5 is acing coding tasks like a pro, giving other models like Claude and Sonnet a run for their money.</li>
+<li>Personal thoughts: It's like watching a coding Olympics, and Qwen 2.5 is sprinting ahead!</li>
+<li>Description: This model's versatility in different sizes makes it a Swiss Army knife for developers. Code like a wizard, anyone?</li>
+</ul>
+</div><div class='card'><h2>3. <strong>LLaMA-Berry: Pairwise Optimization for O1-like Olympiad-Level Mathematical Reasoning</strong> 🍓📚</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gl20tf/llamaberry_pairwise_optimization_for_o1like/">Link to post</a></li>
+<li>Facts: LLaMA-Berry is turning mathematical reasoning into a piece of cake with token prediction and CoT modeling.</li>
+<li>Personal thoughts: Who knew math could be so... berry delicious?</li>
+<li>Description: This project is making AI smarter in math, one berry at a time. Future math geniuses, rejoice!</li>
+</ul>
+</div><div class='card'><h2>4. <strong>New mystery model on LLM Arena</strong> 🕵️‍♂️🎭</h2>
+<ul>
+<li>Reddit: <a href="https://i.redd.it/cxrpxc5uj8zd1.png">Link to post</a></li>
+<li>Facts: A mysterious new model has appeared, and everyone's guessing what it's packing under the hood.</li>
+<li>Personal thoughts: It's like a tech thriller, and we're all playing detective!</li>
+<li>Description: Whether it's a game-changer or a dud, this model's reveal will be a spectacle to watch.</li>
+</ul>
+</div><div class='card'><h2>5. <strong>Physics knowledge-based LLM</strong> 🌌🔬</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gkufpx/physics_knowledgebased_llm/">Link to post</a></li>
+<li>Facts: AI is flexing its physics muscles, but it's not quite ready to lift the heavyweights.</li>
+<li>Personal thoughts: It's a start, but we're still waiting for the Einstein of AI.</li>
+<li>Description: With tools like OpenWebUI and RAG, AI might just crack the physics code soon.</li>
+</ul>
+</div><div class='card'><h2>6. <strong>Benchmarking GGUF Models</strong> 📊🔍</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gkzdh0/benchmarking_gguf_models/">Link to post</a></li>
+<li>Facts: Users are diving deep into benchmarking, using private datasets to get the real scoop.</li>
+<li>Personal thoughts: It's like giving AI a pop quiz to see if it's been paying attention.</li>
+<li>Description: These benchmarks could be the litmus test for GGUF models, separating the wheat from the chaff.</li>
+</ul>
+</div><div class='card'><h2>7. <strong>Can someone explain this</strong> 🤔🔌</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gks9hr/can_someone_explain_this/">Link to post</a></li>
+<li>Facts: A deep dive into GPU communication, comparing AMD and Nvidia like rival wrestlers.</li>
+<li>Personal thoughts: It's the tech equivalent of a smackdown, and I'm here for it!</li>
+<li>Description: Understanding this tech talk could supercharge your AI projects. Power up!</li>
+</ul>
+</div><div class='card'><h2>8. <strong>8B VLM running on $130 RK3588 SBC, NPU accelerated - 4 tokens/s, 6.5sec latency. (MiniCPM-V 2.6)</strong> 💻💨</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gkf282/8b_vlm_running_on_130_rk3588_sbc_npu_accelerated/">Link to post</a></li>
+<li>Facts: Running a beefy VLM on a budget SBC? Now that's a brainy bargain!</li>
+<li>Personal thoughts: It's like fitting a rocket engine in a go-kart. Fast and furious!</li>
+<li>Description: This setup could open doors for affordable AI solutions. Get ready for a tech revolution!</li>
+</ul>
+</div><div class='card'><h2>9. <strong>An LLM-Proof Approach to Reinventing Captcha Systems</strong> 🧩🔒</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gkeo6u/an_llmproof_approach_to_reinventing_captcha/">Link to post</a></li>
+<li>Facts: AI is getting creative with captcha, making it harder for bots and easier for humans.</li>
+<li>Personal thoughts: It's a captcha cat-and-mouse game, and AI is catching up!</li>
+<li>Description: This new approach could be the shield we need against sneaky bots. Game on!</li>
+</ul>
+</div><div class='card'><h2>10. <strong>Made a $200 SBC run 3B model ~10+token/s ish, what can I do with it?</strong> 💡💸</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gkg9gw/made_a_200_sbc_run_3b_model_10tokens_ish_what_can/">Link to post</a></li>
+<li>Facts: A user cracked the code to run a hefty model on a budget SBC. Now, what to do with it?</li>
+<li>Personal thoughts: It's like having a superpower and figuring out your first heroic act.</li>
+<li>Description: From servers to chatbots, the possibilities are endless. Let your imagination run wild!</li>
+</ul>
+</div><div class='card'><h2>11. <strong>Can we run small LLM on CPU at ms level now?</strong> ⏱️🤖</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gkvu7p/can_we_run_small_llm_on_cpu_at_ms_level_now/">Link to post</a></li>
+<li>Facts: Users are chasing the dream of super-speedy LLMs on CPUs.</li>
+<li>Personal thoughts: It's like teaching a tortoise to sprint. Possible, but fascinating!</li>
+<li>Description: If they crack this, it could democratize AI computing. Watch this space!</li>
+</ul>
+</div><div class='card'><h2>12. <strong>Building a new pc. Is the 3090 still relevant for a new build?</strong> 🛠️🖥️</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gkt6ne/building_a_new_pc_is_the_3090_still_relevant_for/">Link to post</a></li>
+<li>Facts: The age-old debate: stick with the trusty 3090 or upgrade to the shiny new kids?</li>
+<li>Personal thoughts: It's like choosing between a classic car and a flashy sports model. Tough call!</li>
+<li>Description: Whether you're a 3090 loyalist or a 4090 fan, your choice will shape your AI adventures.</li>
+</ul>
+</div>
+        <div class='card summary-card'>
+            <h2>Summary and Prospect 🚀</h2>
+            <p>In a world where AI models are the new rockstars and coding challenges are the ultimate concert, we've just witnessed a symphony of innovation. From mystery models to berry-licious math wizards, the AI landscape is as thrilling as a rollercoaster ride. So, buckle up, folks! The future is here, and it's full of surprises. 🎢🌠
+```</p>
 
-    @staticmethod
-    def get_renderer_js():
-        return """
+        </div>
+        </div><div class='section-divider'></div>
+        <div class='program-info'>
+            <h2 class='info-title'>程序运行信息</h2>
+            <div class='info-card'>
+                
+            <div class='info-item'>
+                <i class='fas fa-play-circle'></i>
+                <span class='info-label'>开始时���</span>
+                <span class='info-value'>2024-11-07 01:10:12</span>
+            </div>
+            <div class='info-item'>
+                <i class='fas fa-stop-circle'></i>
+                <span class='info-label'>结束时间</span>
+                <span class='info-value'>2024-11-07 01:13:22</span>
+            </div>
+            <div class='info-item'>
+                <i class='fas fa-clock'></i>
+                <span class='info-label'>运行时长</span>
+                <span class='info-value'>190.00 秒</span>
+            </div>
+            <div class='info-item'>
+                <i class='fas fa-microchip'></i>
+                <span class='info-label'>使用模型</span>
+                <span class='info-value'>glm-4-plus</span>
+            </div>
+        
+            </div>
+        </div>
+        </div>
+            </div>
+            <footer>
+                <p>生成于 2024-11-07 01:13:22</p>
+            </footer>
+            <div class="back-to-top">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+            <script>
+                // 将所有功能包装在一个函数中
+                function initializePage() {
+                    // 暗色模式切换功能
+                    const darkModeToggle = document.getElementById('darkModeToggle');
+                    if (darkModeToggle) {
+                        darkModeToggle.addEventListener('click', function() {
+                            document.body.classList.toggle('dark-mode');
+                            this.textContent = document.body.classList.contains('dark-mode') 
+                                ? '切换到亮色模式' 
+                                : '切换到暗色模式';
+                        });
+                    }
+
+                    // 目录功能
+                    const tocToggle = document.querySelector('.toc-toggle');
+                    const toc = document.querySelector('.toc');
+                    
+                    if (tocToggle && toc) {
+                        tocToggle.addEventListener('click', function() {
+                            toc.classList.toggle('visible');
+                        });
+                    }
+                    
+                    // 生成目录内容
+                    function generateToc() {
+                        const headings = document.querySelectorAll('.card h2');
+                        const tocList = document.querySelector('.toc-list');
+                        
+                        if (!tocList) return;
+                        
+                        tocList.innerHTML = '';
+                        
+                        headings.forEach((heading, index) => {
+                            heading.id = `heading-${index}`;
+                            
+                            const li = document.createElement('li');
+                            li.classList.add('toc-item');
+                            
+                            const a = document.createElement('a');
+                            a.href = `#heading-${index}`;
+                            a.textContent = heading.textContent;
+                            a.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                heading.scrollIntoView({ behavior: 'smooth' });
+                            });
+                            
+                            li.appendChild(a);
+                            tocList.appendChild(li);
+                        });
+                    }
+                    
+                    // 更新目录激活状态
+                    function updateTocActiveState() {
+                        const headings = document.querySelectorAll('.card h2');
+                        const tocItems = document.querySelectorAll('.toc-item');
+                        
+                        headings.forEach((heading, index) => {
+                            const rect = heading.getBoundingClientRect();
+                            if (rect.top >= 0 && rect.top <= window.innerHeight * 0.5) {
+                                tocItems.forEach(item => item.classList.remove('active'));
+                                tocItems[index].classList.add('active');
+                            }
+                        });
+                    }
+                    
+                    generateToc();
+                    window.addEventListener('scroll', updateTocActiveState);
+
+                    // 返回顶部功能和进度条
+                    const backToTop = document.querySelector('.back-to-top');
+                    window.addEventListener('scroll', () => {
+                        if (window.scrollY > 300) {
+                            backToTop.classList.add('visible');
+                        } else {
+                            backToTop.classList.remove('visible');
+                        }
+                        
+                        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                        const scrolled = (winScroll / height) * 100;
+                        document.querySelector('.progress-bar').style.width = scrolled + '%';
+                    });
+
+                    // 返回顶部点击事件
+                    backToTop.addEventListener('click', () => {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    });
+
+                    // 添加淡入效果
+                    const cards = document.querySelectorAll('.card');
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('fade-in');
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.1 });
+                    
+                    cards.forEach(card => observer.observe(card));
+                }
+
+                // 在 DOM 加载完成后初始化所有功能
+                document.addEventListener('DOMContentLoaded', initializePage);
+            </script>
+            
         <script>
         window.onload = init;
         function init() {
@@ -979,8 +1107,8 @@ class HTMLGenerator:
         }
         
         class Renderer {
-            #vertexSrc = "#version 300 es\\nprecision highp float;\\nin vec4 position;\\nvoid main(){gl_Position=position;}";
-            #fragmtSrc = "#version 300 es\\nprecision highp float;\\nout vec4 O;\\nuniform float time;\\nuniform vec2 resolution;\\nvoid main() {\\n\\tvec2 uv=gl_FragCoord.xy/resolution;\\n\\tO=vec4(uv,sin(time)*.5+.5,1);\\n}";
+            #vertexSrc = "#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}";
+            #fragmtSrc = "#version 300 es\nprecision highp float;\nout vec4 O;\nuniform float time;\nuniform vec2 resolution;\nvoid main() {\n\tvec2 uv=gl_FragCoord.xy/resolution;\n\tO=vec4(uv,sin(time)*.5+.5,1);\n}";
             #vertices = [-1, 1, -1, -1, 1, 1, 1, -1];
             
             constructor(canvas, scale) {
@@ -1083,255 +1211,7 @@ class HTMLGenerator:
             }
         }
         </script>
-        """
-
-    @staticmethod
-    def generate_html_structure(content, generation_time):
-        return f"""
-        <!DOCTYPE html>
-        <html lang="en">
-        <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width, initial-scale=1.0">
-            <link rel="icon" type="image/png" href="../assets/favicon.png">
-            <title>🎧Raddit_AI_search🎧</title>
-            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-            {HTMLGenerator.get_css()}
-            {HTMLGenerator.get_shader()}
-        </head>
-        <body>
-            <div class="progress-bar"></div>
-            <div class="toc-toggle">
-                <i class="fas fa-list"></i>
-            </div>
-            <nav class="toc">
-                <ul class="toc-list"></ul>
-            </nav>
-            <header>
-                <h1>🚀 Reddit AI 探索者 🤖</h1>
-                <button id="darkModeToggle">切换到暗色模式</button>
-            </header>
-            <div class="container">
-                <div class="main-title">
-                    <span class="emoji">🌟</span>
-                    <h2>AI's Wild West: The Latest Frontier in Tech-savvy Shenanigans</h2>
-                    <span class="emoji">✨</span>
-                </div>
-                {content}
-            </div>
-            <footer>
-                <p>生成于 {generation_time}</p>
-            </footer>
-            <div class="back-to-top">
-                <i class="fas fa-arrow-up"></i>
-            </div>
-            <script>
-                // 将所有功能包装在一个函数中
-                function initializePage() {{
-                    // 暗色模式切换功能
-                    const darkModeToggle = document.getElementById('darkModeToggle');
-                    if (darkModeToggle) {{
-                        darkModeToggle.addEventListener('click', function() {{
-                            document.body.classList.toggle('dark-mode');
-                            this.textContent = document.body.classList.contains('dark-mode') 
-                                ? '切换到亮色模式' 
-                                : '切换到暗色模式';
-                        }});
-                    }}
-
-                    // 目录功能
-                    const tocToggle = document.querySelector('.toc-toggle');
-                    const toc = document.querySelector('.toc');
-                    
-                    if (tocToggle && toc) {{
-                        tocToggle.addEventListener('click', function() {{
-                            toc.classList.toggle('visible');
-                        }});
-                    }}
-                    
-                    // 生成目录内容
-                    function generateToc() {{
-                        const headings = document.querySelectorAll('.card h2');
-                        const tocList = document.querySelector('.toc-list');
-                        
-                        if (!tocList) return;
-                        
-                        tocList.innerHTML = '';
-                        
-                        headings.forEach((heading, index) => {{
-                            heading.id = `heading-${{index}}`;
-                            
-                            const li = document.createElement('li');
-                            li.classList.add('toc-item');
-                            
-                            const a = document.createElement('a');
-                            a.href = `#heading-${{index}}`;
-                            a.textContent = heading.textContent;
-                            a.addEventListener('click', function(e) {{
-                                e.preventDefault();
-                                heading.scrollIntoView({{ behavior: 'smooth' }});
-                            }});
-                            
-                            li.appendChild(a);
-                            tocList.appendChild(li);
-                        }});
-                    }}
-                    
-                    // 更新目录激活状态
-                    function updateTocActiveState() {{
-                        const headings = document.querySelectorAll('.card h2');
-                        const tocItems = document.querySelectorAll('.toc-item');
-                        
-                        headings.forEach((heading, index) => {{
-                            const rect = heading.getBoundingClientRect();
-                            if (rect.top >= 0 && rect.top <= window.innerHeight * 0.5) {{
-                                tocItems.forEach(item => item.classList.remove('active'));
-                                tocItems[index].classList.add('active');
-                            }}
-                        }});
-                    }}
-                    
-                    generateToc();
-                    window.addEventListener('scroll', updateTocActiveState);
-
-                    // 返回顶部功能和进度条
-                    const backToTop = document.querySelector('.back-to-top');
-                    window.addEventListener('scroll', () => {{
-                        if (window.scrollY > 300) {{
-                            backToTop.classList.add('visible');
-                        }} else {{
-                            backToTop.classList.remove('visible');
-                        }}
-                        
-                        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
-                        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
-                        const scrolled = (winScroll / height) * 100;
-                        document.querySelector('.progress-bar').style.width = scrolled + '%';
-                    }});
-
-                    // 返回顶部点击事件
-                    backToTop.addEventListener('click', () => {{
-                        window.scrollTo({{
-                            top: 0,
-                            behavior: 'smooth'
-                        }});
-                    }});
-
-                    // 添加淡入效果
-                    const cards = document.querySelectorAll('.card');
-                    const observer = new IntersectionObserver((entries) => {{
-                        entries.forEach(entry => {{
-                            if (entry.isIntersecting) {{
-                                entry.target.classList.add('fade-in');
-                                observer.unobserve(entry.target);
-                            }}
-                        }});
-                    }}, {{ threshold: 0.1 }});
-                    
-                    cards.forEach(card => observer.observe(card));
-                }}
-
-                // 在 DOM 加载完成后初始化所有功能
-                document.addEventListener('DOMContentLoaded', initializePage);
-            </script>
-            {HTMLGenerator.get_renderer_js()}
+        
         </body>
         </html>
-        """
-
-def custom_markdown_to_html(md_content):
-    # 分离主要内容和程序运行信息
-    main_content, run_info = split_content(md_content)
-    
-    html_content = "<div class='container main-content'>"
-    html_content += "<div class='content-section'>"  # 添加内容区域包装
-    
-    # 处理主要内容
-    pattern = r'(## .+?\n)(.+?)(?=\n## |\n\nIn a world|\n\nAnd there you have it|\Z)'
-    matches = re.findall(pattern, main_content, re.DOTALL)
-    
-    # 添加常规卡片
-    for title, content in matches:
-        if not any(keyword in title.lower() for keyword in ["总结", "summary", "conclusion"]):
-            html_title = markdown2.markdown(title.strip())
-            html_content += f"<div class='card'>{html_title}{markdown2.markdown(content.strip())}</div>"
-    
-    # 查找并添加总结部分 - 支持多种总结开头
-    summary_pattern = r'\n\n(In a world.*?|And there you have it.*?)(?=\n*?-{3,}|\Z)'
-    summary_match = re.search(summary_pattern, main_content, re.DOTALL)
-    if summary_match:
-        summary_content = summary_match.group(1).strip()
-        html_content += f"""
-        <div class='card summary-card'>
-            <h2>Summary and Prospect 🚀</h2>
-            {markdown2.markdown(summary_content)}
-        </div>
-        """
-    
-    html_content += "</div>"  # 结束内容区域
-    
-    # 添加分隔区域
-    html_content += "<div class='section-divider'></div>"
-    
-    # 添加程序运行信息区块
-    if run_info:
-        html_content += """
-        <div class='program-info'>
-            <h2 class='info-title'>程序运行信息</h2>
-            <div class='info-card'>
-                """ + run_info + """
-            </div>
-        </div>
-        """
-    
-    html_content += "</div>"
-    return html_content
-
-def split_content(md_content):
-    # 使用更精确的分割方式
-    run_info_pattern = r'程序开始运行时间: (.*?)\n.*?程序结束运行时间: (.*?)\n.*?整个运行过程使用了 (.*?)秒.*?本次程序运行使用的模型: (.*?)(?:\n|$)'
-    match = re.search(run_info_pattern, md_content, re.DOTALL)
-    
-    if match:
-        # 提取主要内容（在运行信息之前的所有内容）
-        main_content = md_content[:match.start()].strip()
         
-        # 格式化运行信息HTML，调整时间显示格式
-        run_info = f"""
-            <div class='info-item'>
-                <i class='fas fa-play-circle'></i>
-                <span class='info-label'>开始时���</span>
-                <span class='info-value'>{match.group(1).strip()}</span>
-            </div>
-            <div class='info-item'>
-                <i class='fas fa-stop-circle'></i>
-                <span class='info-label'>结束时间</span>
-                <span class='info-value'>{match.group(2).strip()}</span>
-            </div>
-            <div class='info-item'>
-                <i class='fas fa-clock'></i>
-                <span class='info-label'>运行时长</span>
-                <span class='info-value'>{match.group(3).strip()} 秒</span>
-            </div>
-            <div class='info-item'>
-                <i class='fas fa-microchip'></i>
-                <span class='info-label'>使用模型</span>
-                <span class='info-value'>{match.group(4).strip()}</span>
-            </div>
-        """
-    else:
-        main_content = md_content
-        run_info = ""
-    
-    return main_content, run_info
-
-def generate_html(input_markdown_file, output_html_file):
-    with open(input_markdown_file, "r", encoding="utf-8") as md_file:
-        md_content = md_file.read()
-
-    html_content = custom_markdown_to_html(md_content)
-
-    html_structure = HTMLGenerator.generate_html_structure(html_content, datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
-
-    with open(output_html_file, "w", encoding="utf-8") as html_file:
-        html_file.write(html_structure)

@@ -113,10 +113,10 @@ def create_tasks(output_markdown_file):
 
         ## 1. [Post Title] 🚀
         (If there is no corresponding link, you can not fill in)
-        - Reddit:(https://www.reddit.com/r/LocalLLaMA/comments/example.com)
-        - Github:(https://github.com/example.com)
-        - Page:(https://papeg.ai/example2.com)
-        - Huggingface(https://huggingface.ai/example3.com)....
+        - Reddit:(https://www.reddit.com/r/LocalLLaMA/comments/example1.com)
+        - Github:(https://github.com/example2.com)
+        - Page:(https://papeg.ai/example3.com)
+        - Huggingface(https://huggingface.ai/example4.com)....
         ....(More other links)
         - facts(To describe in detail)
         - Personal thoughts on how it connects to the overall theme of the newsletter
@@ -126,10 +126,10 @@ def create_tasks(output_markdown_file):
         (If there are multiple related links, you can write multiple links.)
         (If there is no corresponding link, you can not fill in)
         ## 2. [Post Title] 🧠
-        - Reddit:(https://www.reddit.com/r/LocalLLaMA/comments/example.com)
-        - Github:(https://github.com/example.com)
-        - Page:((https://papeg.ai/example2.com)
-        - Huggingface(https://huggingface.ai/example3.com)....
+        - Reddit:(https://www.reddit.com/r/LocalLLaMA/comments/example1.com)
+        - Github:(https://github.com/example2.com)
+        - Page:((https://papeg.ai/example3.com)
+        - Huggingface(https://huggingface.ai/example4.com)....
         ....(More other links)
         - facts(To describe in detail)
         - Personal thoughts on how it connects to the overall theme of the newsletter
@@ -139,10 +139,10 @@ def create_tasks(output_markdown_file):
         (If there are multiple related links, you can write multiple links.)
         (If there is no corresponding link, you can not fill in)
         ## 3. [Post Title] 🚀
-        - Reddit:(https://www.reddit.com/r/LocalLLaMA/comments/example.com)
-        - Github:(https://github.com/example.com)
-        - Page:(https://papeg.ai/example2.com)
-        - Huggingface(https://huggingface.ai/example3.com)
+        - Reddit:(https://www.reddit.com/r/LocalLLaMA/comments/example1.com)
+        - Github:(https://github.com/example2.com)
+        - Page:(https://papeg.ai/example3.com)
+        - Huggingface(https://huggingface.ai/example4.com)
         ....(More other links)
         - facts(To describe in detail)
         - Personal thoughts on how it connects to the overall theme of the newsletter
@@ -156,8 +156,7 @@ def create_tasks(output_markdown_file):
         1. Make sure that it does and if it doesn't, rewrite it accordingly. 
         2. Ensure the introduction is witty and humorous, and the summary is vivid and memorable.
         3. Note that the links correspond to different platforms. For example, Reddit, Github, Huggingfacce, and so on,If there are errors, modify them
-        4. No need to send "Feedback and Critique".
-        """,
+        4. Finally, there is no need to output the "feedback and criticism" section        """,
         agent=critic,
         expected_output="Give feedback and criticism on draft blog posts and make revisions, ensuring the specified markdown format is followed, including the witty introduction and vivid summary.",
         output_file=output_markdown_file,
