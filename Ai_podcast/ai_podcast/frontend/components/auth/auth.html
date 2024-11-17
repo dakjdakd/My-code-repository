@@ -1,0 +1,94 @@
+<div class="auth-modal" id="authModal">
+    <div class="auth-container">
+        <!-- 关闭按钮 -->
+        <button class="close-btn">
+            <i data-lucide="x" class="w-6 h-6"></i>
+        </button>
+
+        <!-- 切换标签 -->
+        <div class="auth-tabs">
+            <button class="auth-tab active" data-tab="login">登录</button>
+            <button class="auth-tab" data-tab="register">注册</button>
+        </div>
+
+        <!-- 登录表单 -->
+        <form id="loginForm" class="auth-form active">
+            <div class="form-group">
+                <label>
+                    <i data-lucide="mail" class="form-icon"></i>
+                    <input type="email" placeholder="邮箱地址" required>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <i data-lucide="lock" class="form-icon"></i>
+                    <input type="password" placeholder="密码" required>
+                </label>
+            </div>
+            <div class="form-options">
+                <label class="remember-me">
+                    <input type="checkbox">
+                    <span>记住我</span>
+                </label>
+                <a href="#" class="forgot-password">忘记密码？</a>
+            </div>
+            <button type="submit" class="auth-submit">登录</button>
+        </form>
+
+        <!-- 注册表单 -->
+        <form id="registerForm" class="auth-form">
+            <div class="form-group">
+                <label>
+                    <i data-lucide="user" class="form-icon"></i>
+                    <input type="text" placeholder="用户名" required>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <i data-lucide="mail" class="form-icon"></i>
+                    <input type="email" placeholder="邮箱地址" required>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <i data-lucide="lock" class="form-icon"></i>
+                    <input type="password" placeholder="密码" required>
+                </label>
+            </div>
+            <div class="form-group">
+                <label>
+                    <i data-lucide="lock" class="form-icon"></i>
+                    <input type="password" placeholder="确认密码" required>
+                </label>
+            </div>
+            <div class="form-options">
+                <label class="terms">
+                    <input type="checkbox" required>
+                    <span>我同意 <a href="/pages/terms.html">服务条款</a> 和 <a href="/pages/privacy.html">隐私政策</a></span>
+                </label>
+            </div>
+            <button type="submit" class="auth-submit">注册</button>
+        </form>
+
+        <!-- 社交登录 -->
+        <div class="social-auth">
+            <div class="divider">
+                <span>或者使用以下方式</span>
+            </div>
+            <div class="social-buttons">
+                <button class="social-btn google">
+                    <i data-lucide="chrome" class="social-icon"></i>
+                    Google
+                </button>
+                <button class="social-btn github">
+                    <i data-lucide="github" class="social-icon"></i>
+                    GitHub
+                </button>
+                <button class="social-btn wechat">
+                    <i data-lucide="wechat" class="social-icon"></i>
+                    微信
+                </button>
+            </div>
+        </div>
+    </div>
+</div> 

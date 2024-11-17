@@ -1,0 +1,693 @@
+/* 添加渐变背景变量和基础样式 */
+:root {
+    --color-bg1: rgb(8, 10, 15);
+    --color-bg2: rgb(0, 17, 32);
+    --color1: 99, 102, 241;  /* Indigo */
+    --color2: 139, 92, 246;  /* Purple */
+    --color3: 120, 100, 255;
+    --color4: 60, 170, 255;
+    --color5: 130, 60, 255;
+    --circle-size: 70%;
+}
+
+body {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background: transparent;
+}
+
+/* 渐变背景样式 */
+.gradient-bg {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 0;
+    background: linear-gradient(40deg, var(--color-bg1), var(--color-bg2));
+    overflow: hidden;
+}
+
+.gradients-container {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    filter: url(#goo) blur(40px);
+    opacity: 0.9;
+}
+
+/* 渐变圆样式 */
+.g1, .g2, .g3, .g4, .g5 {
+    position: absolute;
+    width: var(--circle-size);
+    height: var(--circle-size);
+    mix-blend-mode: soft-light;
+    border-radius: 50%;
+    opacity: 0;
+    will-change: transform, opacity;
+    pointer-events: none;
+}
+
+/* 渐变圆的颜色和动画设置 */
+.g1 { 
+    background: radial-gradient(circle at center, rgba(var(--color1), 0.9) 0, rgba(var(--color1), 0) 70%); 
+    animation: float1 50s infinite;
+}
+
+.g2 { 
+    background: radial-gradient(circle at center, rgba(var(--color2), 0.9) 0, rgba(var(--color2), 0) 70%); 
+    animation: float2 55s infinite;
+}
+
+.g3 { 
+    background: radial-gradient(circle at center, rgba(var(--color3), 0.9) 0, rgba(var(--color3), 0) 70%); 
+    animation: float3 45s infinite;
+}
+
+.g4 { 
+    background: radial-gradient(circle at center, rgba(var(--color4), 0.9) 0, rgba(var(--color4), 0) 70%); 
+    animation: float4 60s infinite;
+}
+
+.g5 { 
+    background: radial-gradient(circle at center, rgba(var(--color5), 0.9) 0, rgba(var(--color5), 0) 70%); 
+    animation: float5 52s infinite;
+}
+
+/* 浮动动画 */
+@keyframes float1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(100%, -50%) scale(1.2); }
+    50% { transform: translate(50%, 100%) scale(0.8); }
+    75% { transform: translate(-50%, 50%) scale(1.1); }
+}
+
+@keyframes float2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-100%, 50%) scale(0.8); }
+    50% { transform: translate(-50%, -100%) scale(1.2); }
+    75% { transform: translate(100%, -25%) scale(0.9); }
+}
+
+@keyframes float3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(50%, 100%) scale(1.1); }
+    50% { transform: translate(-100%, 50%) scale(0.8); }
+    75% { transform: translate(-25%, -100%) scale(1.2); }
+}
+
+@keyframes float4 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(-50%, -100%) scale(1.2); }
+    50% { transform: translate(100%, -25%) scale(0.9); }
+    75% { transform: translate(25%, 100%) scale(0.8); }
+}
+
+@keyframes float5 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    25% { transform: translate(100%, 25%) scale(0.8); }
+    50% { transform: translate(-50%, -75%) scale(1.2); }
+    75% { transform: translate(-100%, 50%) scale(0.9); }
+}
+
+/* 标题容器样式 */
+.title-container {
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+/* 标题渐变文字样式 */
+.gradient-text {
+    font-size: 5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    line-height: 1.2;
+}
+
+/* 副标题容器 */
+.subtitle-container {
+    margin-top: 0.5rem;
+}
+
+/* 中文副标题样式 */
+.subtitle {
+    font-size: 3.5rem;
+    font-weight: 700;
+    background: linear-gradient(to right, #ec4899, #8b5cf6);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: 8px;
+}
+
+@keyframes shine {
+    0% {
+        background-position: 0% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+/* 标语容器样式 */
+.slogan-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    margin-top: 4rem;
+    padding: 0 2rem;
+    position: relative;
+    z-index: 1;
+}
+
+.slogan-text {
+    font-size: 2rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+    animation: softGlow 4s ease-in-out infinite;
+    letter-spacing: 2px;
+    line-height: 1.5;
+}
+
+.slogan-text-zh {
+    font-size: 1.75rem;
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+    animation: softGlow 4s ease-in-out infinite;
+    animation-delay: 0.5s;
+    letter-spacing: 4px;
+    margin-top: 1rem;
+}
+
+@keyframes softGlow {
+    0%, 100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.25);
+        opacity: 0.85;
+    }
+    50% {
+        text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+        opacity: 1;
+    }
+}
+
+/* 对话长度选择器样式优化 */
+.dialogue-length-selector {
+    background: rgba(255, 255, 255, 0.08);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    margin: 2rem 0;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.dialogue-length-selector h3 {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 2rem;
+    text-align: center;
+    background: linear-gradient(to right, #ffffff, #c4b5fd);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 选项容器样式 */
+.dialogue-option {
+    position: relative;
+    flex: 1;
+    min-width: 200px;
+    transform: translateY(0);
+    transition: all 0.3s ease;
+}
+
+.dialogue-option:hover {
+    transform: translateY(-5px);
+}
+
+/* 单选框样式 */
+.dialogue-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+/* 选项标签样式 */
+.dialogue-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* 选中状态样式 */
+.dialogue-option input[type="radio"]:checked + .dialogue-label {
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.3), rgba(167, 139, 250, 0.2));
+    border-color: rgba(139, 92, 246, 0.4);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+
+/* 悬停状态样式 */
+.dialogue-label:hover {
+    background: rgba(139, 92, 246, 0.15);
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* 选项标题样式 */
+.dialogue-label .text-lg {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* 选项描述样式 */
+.dialogue-label .text-sm {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* 选项计数样式 */
+.dialogue-label .text-sm:first-of-type {
+    color: rgba(139, 92, 246, 0.9);
+    font-weight: 500;
+}
+
+/* 添加选中指示器 */
+.dialogue-option input[type="radio"]:checked + .dialogue-label::before {
+    content: '';
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: rgba(139, 92, 246, 0.9);
+    border-radius: 50%;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); opacity: 1; }
+    50% { transform: scale(1.2); opacity: 0.8; }
+    100% { transform: scale(1); opacity: 1; }
+}
+
+/* 选项组布局优化 */
+.flex.justify-center.gap-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    padding: 0.5rem;
+}
+
+/* 添加响应式布局 */
+@media (max-width: 768px) {
+    .dialogue-length-selector {
+        padding: 1.5rem;
+    }
+    
+    .flex.justify-center.gap-4 {
+        grid-template-columns: 1fr;
+    }
+    
+    .dialogue-option {
+        min-width: unset;
+    }
+}
+
+/* 在有的 style.css 中添加或更新按钮样式 */
+
+/* 按钮容器样式 */
+.flex.justify-center.space-x-4.mb-8 {
+    display: flex;
+    gap: 2rem;
+    margin: 2rem 0;
+    padding: 0.5rem;
+}
+
+/* 基础按钮样式 */
+.btn-primary {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem 2rem;
+    min-width: 180px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #ffffff;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* 上传文档按钮样式 */
+#uploadBtn {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.5), rgba(79, 70, 229, 0.5));
+    box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+}
+
+#uploadBtn:hover {
+    background: linear-gradient(135deg, rgba(139, 92, 246, 0.7), rgba(79, 70, 229, 0.7));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+}
+
+/* 直接输入按钮样式 */
+#inputBtn {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.5), rgba(167, 139, 250, 0.5));
+    box-shadow: 0 4px 15px rgba(236, 72, 153, 0.3);
+}
+
+#inputBtn:hover {
+    background: linear-gradient(135deg, rgba(236, 72, 153, 0.7), rgba(167, 139, 250, 0.7));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(236, 72, 153, 0.4);
+}
+
+/* 按钮图标样式 */
+.btn-primary i {
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-right: 0.75rem;
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+/* 按钮发光效果 */
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+/* 按钮点击效果 */
+.btn-primary:active {
+    transform: scale(0.98);
+}
+
+/* 添加按钮激活状态样式 */
+.btn-primary.active {
+    border-color: rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 20px rgba(var(--color1), 0.4);
+}
+
+/* 响应式调整 */
+@media (max-width: 640px) {
+    .flex.justify-center.space-x-4.mb-8 {
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .btn-primary {
+        width: 100%;
+        padding: 0.875rem 1.5rem;
+    }
+}
+
+/* 主容器样式 */
+.main-results-container {
+    display: flex;
+    flex-direction: column;
+    gap: 3rem;
+    width: 100%;
+}
+
+/* 知识点容器样式 */
+.knowledge-container {
+    width: 100%;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.1), rgba(79, 70, 229, 0.05));
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.knowledge-points-wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.knowledge-point {
+    flex: 1 1 300px;
+    min-width: 300px;
+    max-width: calc(33.33% - 1rem);
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.15), rgba(79, 70, 229, 0.1));
+    padding: 1.5rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    transition: all 0.3s ease;
+}
+
+/* 对话内容容器样式 */
+.dialogue-container {
+    width: 100%;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: linear-gradient(145deg, rgba(79, 70, 229, 0.1), rgba(139, 92, 246, 0.05));
+    border-radius: 1.5rem;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+}
+
+.dialogue-content {
+    max-height: 800px;
+    overflow-y: auto;
+    padding: 1rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 1rem;
+}
+
+/* 章节标���样式 */
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2rem;
+    background: linear-gradient(to right, #ffffff, #e0e7ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(to right, rgba(139, 92, 246, 0.5), rgba(79, 70, 229, 0.5));
+}
+
+/* 对话气泡样式 */
+.dialogue-segment {
+    max-width: 85%;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 1rem;
+    position: relative;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.dialogue-segment.interviewer {
+    margin-right: auto;
+    background: linear-gradient(145deg, rgba(79, 70, 229, 0.15), rgba(79, 70, 229, 0.05));
+    border-left: 4px solid rgba(79, 70, 229, 0.8);
+}
+
+.dialogue-segment.expert {
+    margin-left: auto;
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.15), rgba(139, 92, 246, 0.05));
+    border-right: 4px solid rgba(139, 92, 246, 0.8);
+}
+
+/* 角色标签样式 */
+.role-label {
+    position: absolute;
+    top: -0.75rem;
+    padding: 0.5rem 1.25rem;
+    border-radius: 2rem;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.interviewer .role-label {
+    left: 1rem;
+    background: linear-gradient(to right, rgba(79, 70, 229, 0.9), rgba(67, 56, 202, 0.9));
+}
+
+.expert .role-label {
+    right: 1rem;
+    background: linear-gradient(to right, rgba(139, 92, 246, 0.9), rgba(124, 58, 237, 0.9));
+}
+
+/* 对话内容样式 */
+.dialogue-content {
+    font-size: 1.1rem;
+    line-height: 1.8;
+    color: rgba(255, 255, 255, 0.95);
+    margin-top: 0.75rem;
+}
+
+/* 添加淡入动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 响应式布局 */
+@media (max-width: 768px) {
+    .main-results-container {
+        padding: 1rem;
+    }
+    
+    .knowledge-point {
+        min-width: 100%;
+        max-width: 100%;
+    }
+}
+
+/* 确保主容器是垂直布局 */
+#scriptContainer {
+    display: flex !important;  /* 使用!important确保覆盖其他样式 */
+    flex-direction: column !important;
+    gap: 3rem;
+    width: 100%;
+}
+
+.btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.login-btn {
+    background: transparent;
+    border: 1px solid rgba(var(--color1), 1);
+    color: rgba(var(--color1), 1);
+}
+
+.signup-btn {
+    background: linear-gradient(to right, rgba(var(--color1), 1), rgba(var(--color2), 1));
+    border: none;
+    color: white;
+    margin-left: 0.5rem;
+}
+
+/* 开始使用按钮样式优化 */
+.start-button {
+    display: inline-block;
+    min-width: 240px;
+    margin: 2rem auto;
+    padding: 1rem 2.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    text-align: center;
+    background: linear-gradient(to right, rgba(var(--color1), 1), rgba(var(--color2), 1));
+    color: white;
+    border: none;
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-decoration: none;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+}
+
+.start-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(to right, rgba(var(--color2), 1), rgba(var(--color1), 1));
+}
+
+.start-button:active {
+    transform: translateY(0);
+}
+
+/* 主容器样式调整 */
+.container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-top: 80px; /* 为导航栏留出空间 */
+}
+
+/* Logo容器调整 */
+.text-center.mb-12 {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: calc(100vh - 160px); /* 减去导航和padding的高度 */
+    justify-content: center;
+}
+
+/* 确保内容不会被截断的通用样式 */
+.relative.z-10 {
+    position: relative;
+    z-index: 10;
+    overflow: visible;
+}
+
+/* 响应式调整 */
+@media (max-width: 768px) {
+    .gradient-text {
+        font-size: 3.5rem;
+    }
+    
+    .subtitle {
+        font-size: 2.5rem;
+    }
+}
+
+@media (min-width: 1024px) {
+    .container {
+        max-width: 1200px;
+    }
+}

@@ -85,7 +85,7 @@ def convert_md_to_html(md_file_path):
             }
         }
         
-        /* 暗黑模式样式 */
+        /* 暗黑模样式 */
         body.dark-mode {
             --primary-color: #e0e0e0;
             --secondary-color: #4da6ff;
@@ -578,6 +578,52 @@ def convert_md_to_html(md_file_path):
                 display: none;
             }
         }
+
+        /* 链接样式 */
+        .card a {
+            color: #0066cc !important;
+            text-decoration: none !important;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.3s ease;
+            display: inline-block;
+            background-color: rgba(0, 102, 204, 0.05);
+            margin: 0 2px;
+            cursor: pointer;
+            position: relative;
+        }
+        
+        .card a:hover {
+            background-color: rgba(0, 102, 204, 0.1);
+            color: #0052a3 !important;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* 列表项中的链接 */
+        .card li a {
+            display: inline-block;
+            margin: 0 4px;
+        }
+        
+        /* 外部链接图标 */
+        .card a[target="_blank"]::after {
+            content: '↗️';
+            font-size: 0.8em;
+            margin-left: 4px;
+            opacity: 0.7;
+            vertical-align: text-top;
+        }
+        
+        /* 确保链接在暗色模式下也可见 */
+        body.dark-mode .card a {
+            color: #4da6ff !important;
+        }
+        
+        body.dark-mode .card a:hover {
+            color: #66b3ff !important;
+            background-color: rgba(77, 166, 255, 0.1);
+        }
     </style>
     """
 
@@ -692,20 +738,31 @@ def convert_md_to_html(md_file_path):
     
     
     def custom_markdown_to_html(md_content):
+        def process_links(content):
+            # 处理链接格式
+            pattern = r'\[([^\]]+)\]\((https?://[^\)]+)\)'
+            def replace_link(match):
+                text = match.group(1).strip()
+                url = match.group(2).strip()
+                return f'<a href="{url}" target="_blank" rel="noopener noreferrer">{text}</a>'
+            
+            return re.sub(pattern, replace_link, content)
+
         # 分离主要内容和程序运行信息
         main_content, run_info = split_content(md_content)
         
-        # 处理主要内容
         html_content = "<div class='container main-content'>"
-        html_content += "<div class='content-section'>"  # 添加内容区域包装
+        html_content += "<div class='content-section'>"
         
         pattern = r'(## .+?\n)(.+?)(?=\n## |\Z)'
         matches = re.findall(pattern, main_content, re.DOTALL)
         for title, content in matches:
+            # 处理内容中的链接
+            processed_content = process_links(content)
             html_title = markdown2.markdown(title.strip())
-            html_content += f"<div class='card'>{html_title}{markdown2.markdown(content.strip())}</div>"
+            html_content += f"<div class='card'>{html_title}{markdown2.markdown(processed_content)}</div>"
         
-        html_content += "</div>"  # 结束内容区域
+        html_content += "</div>"
         
         # 添加分隔区域
         html_content += "<div class='section-divider'></div>"
@@ -730,10 +787,7 @@ def convert_md_to_html(md_file_path):
         match = re.search(run_info_pattern, md_content, re.DOTALL)
         
         if match:
-            # 提取主要内容（在运行信息之前的所有内容）
             main_content = md_content[:match.start()].strip()
-            
-            # 格式化运行信息HTML
             run_info = f"""
                 <div class='info-item'>
                     <i class='fas fa-play-circle'></i>
@@ -810,8 +864,6 @@ def convert_md_to_html(md_file_path):
     </body>
     </html>
     """
-
-    
 
     # 生成输出 HTML 文件路径
     output_dir = os.path.dirname(md_file_path)

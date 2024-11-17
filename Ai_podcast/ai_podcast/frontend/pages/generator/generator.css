@@ -1,0 +1,425 @@
+/* 继承全局样式 */
+@import '../../static/css/style.css';
+
+/* 生成器页面特定样式 */
+.podcast-container {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 1.5rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+    overflow: hidden;
+    margin: 2rem auto;
+    max-width: 1000px;
+}
+
+/* 页面容器样式 */
+.container {
+    margin-top: 100px; /* 增加顶部间距，避免被导航栏遮挡 */
+    padding: 2rem;
+}
+
+/* 文本输入框样式 */
+.content-input {
+    width: 100%;
+    min-height: 400px; /* 从800px改为400px */
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 0.75rem;
+    color: white;
+    font-size: 1.1rem;
+    line-height: 1.8;
+    resize: vertical;
+    margin: 2rem 0;
+}
+
+.content-input::placeholder {
+    color: rgba(255, 255, 255, 0.5);
+}
+
+.content-input:focus {
+    outline: none;
+    border-color: rgba(var(--color1), 0.5);
+    box-shadow: 0 0 0 2px rgba(var(--color1), 0.2);
+    background: rgba(255, 255, 255, 0.15);
+}
+
+/* 对话长度选择器样式 - 恢复原来的样式 */
+.dialogue-length-selector {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border-radius: 1rem;
+    padding: 2rem;
+    margin: 2rem 0;
+}
+
+.dialogue-option {
+    position: relative;
+    flex: 1;
+    min-width: 250px; /* 确保选项有足够的宽度 */
+}
+
+.dialogue-label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 1.5rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.75rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+}
+
+.dialogue-option input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+}
+
+.dialogue-option input[type="radio"]:checked + .dialogue-label {
+    background: rgba(139, 92, 246, 0.2);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.2);
+}
+
+.dialogue-label:hover {
+    background: rgba(255, 255, 255, 0.15);
+    transform: translateY(-2px);
+}
+
+/* 选项标题样式 */
+.dialogue-label span:first-child {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #ffffff;
+}
+
+/* 选项描述样式 */
+.dialogue-label span:not(:first-child) {
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* 生成按钮样式 */
+.generate-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    min-width: 200px;
+    padding: 1rem 2.5rem;
+    background: linear-gradient(to right, rgba(139, 92, 246, 0.9), rgba(236, 72, 153, 0.9));
+    color: white;
+    border-radius: 0.75rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.generate-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+.generate-button:active {
+    transform: translateY(0);
+}
+
+/* 上传和输入按钮样式 */
+.upload-button, .input-button {
+    min-width: 180px;
+    font-size: 1.1rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+}
+
+.upload-button {
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.9), rgba(124, 58, 237, 0.9));
+}
+
+.input-button {
+    background: linear-gradient(145deg, rgba(236, 72, 153, 0.9), rgba(219, 39, 119, 0.9));
+}
+
+.upload-button:hover, .input-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+}
+
+/* 操作按钮样式 */
+.action-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    min-width: 180px;
+    padding: 1rem 2rem;
+    color: white;
+    font-size: 1.1rem;
+    font-weight: 500;
+    border-radius: 1rem;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    position: relative;
+    overflow: hidden;
+    opacity: 0.8;
+}
+
+/* 活动按钮样式 */
+.action-button.active {
+    opacity: 1;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.action-button::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(
+        to right,
+        transparent,
+        rgba(255, 255, 255, 0.2),
+        transparent
+    );
+    transition: 0.5s;
+}
+
+.action-button:hover {
+    transform: translateY(-2px);
+    opacity: 1;
+}
+
+.action-button:hover::before {
+    left: 100%;
+}
+
+.action-button:active {
+    transform: translateY(0);
+}
+
+/* 文件上传容器样式 */
+.file-upload-container {
+    border: 2px dashed rgba(255, 255, 255, 0.3);
+    border-radius: 1rem;
+    padding: 3rem 2rem;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.file-upload-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+    cursor: pointer;
+}
+
+.upload-icon {
+    width: 64px;
+    height: 64px;
+    color: rgba(255, 255, 255, 0.8);
+}
+
+.upload-text {
+    font-size: 1.25rem;
+    color: rgba(255, 255, 255, 0.9);
+    font-weight: 500;
+}
+
+.upload-hint {
+    color: rgba(255, 255, 255, 0.7);
+}
+
+.file-types {
+    display: flex;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.file-type-tag {
+    padding: 0.5rem 1rem;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 0.5rem;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9rem;
+}
+
+/* 知识点容器样式优化 */
+.knowledge-container {
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.3), rgba(79, 70, 229, 0.25));
+    border-radius: 1.5rem;
+    padding: 2.5rem;
+    margin: 2rem 0;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.knowledge-points-wrapper {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+    padding: 1rem 0;
+}
+
+.knowledge-point {
+    background: rgba(255, 255, 255, 0.15);
+    padding: 2rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+}
+
+.knowledge-point:hover {
+    transform: translateY(-5px);
+    background: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 25px rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.4);
+}
+
+.point-title {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #ffffff;
+    margin-bottom: 1.5rem;
+    display: block;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1px;
+    background: linear-gradient(to right, #ffffff, #e0e7ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.point-subtopics {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.subtopic {
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.4), rgba(124, 58, 237, 0.4));
+    padding: 1rem 1.5rem;
+    border-radius: 0.75rem;
+    color: #ffffff;
+    font-size: 1.1rem;
+    line-height: 1.6;
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    letter-spacing: 0.5px;
+}
+
+.subtopic:hover {
+    background: linear-gradient(145deg, rgba(139, 92, 246, 0.5), rgba(124, 58, 237, 0.5));
+    transform: translateX(5px);
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+    border-color: rgba(139, 92, 246, 0.3);
+}
+
+/* 知识点标题样式 */
+.section-title {
+    font-size: 2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 2.5rem;
+    background: linear-gradient(to right, #ffffff, #e0e7ff);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 2px;
+    position: relative;
+    padding-bottom: 1rem;
+}
+
+.section-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 100px;
+    height: 2px;
+    background: linear-gradient(to right, rgba(139, 92, 246, 0.5), rgba(79, 70, 229, 0.5));
+}
+
+/* 加载动画容器 */
+.loader-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.loader-container.hidden {
+    display: none;
+}
+
+/* 加载动画 */
+.loader {
+    width: 120px;
+    height: 22px;
+    border-radius: 20px;
+    color: #8b5cf6; /* 使用紫色主题色 */
+    border: 2px solid;
+    position: relative;
+    margin: 0 auto;
+}
+
+.loader::before {
+    content: "";
+    position: absolute;
+    margin: 2px;
+    inset: 0 100% 0 0;
+    border-radius: inherit;
+    background: currentColor;
+    animation: l6 2s infinite;
+}
+
+/* 加载文字样式 */
+.loader-text {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    font-weight: 500;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    animation: pulse 2s infinite;
+}
+
+@keyframes l6 {
+    100% {inset: 0}
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 0.8;
+    }
+    50% {
+        opacity: 1;
+    }
+}
+
+/* 当加载中时隐藏生成按钮 */
+.generating .generate-button {
+    display: none;
+}
+
+/* 当加载中时显示加载动画 */
+.generating .loader-container {
+    display: flex;
+}
+
+/* 其他样式保持不变... */ 

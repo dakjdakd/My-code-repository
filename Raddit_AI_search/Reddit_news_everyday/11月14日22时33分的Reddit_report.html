@@ -1,0 +1,1253 @@
+
+        <!DOCTYPE html>
+        <html lang="en">
+        <head>
+            <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <link rel="icon" type="image/png" href="../assets/favicon.png">
+            <title>🎧Raddit_AI_search🎧</title>
+            <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+            
+        <style>
+            :root {
+                --primary-color: #4a4a4a;
+                --secondary-color: #0066cc;
+                --background-color: #f4f4f4;
+                --card-background: #ffffff;
+                --header-footer-bg: linear-gradient(135deg, rgba(0, 102, 204, 0.85), rgba(0, 82, 164, 0.85));
+                --header-footer-shadow: 0 2px 20px rgba(0, 0, 0, 0.1);
+            }
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: var(--background-color);
+                color: var(--primary-color);
+                margin: 0;
+                padding: 0;
+                line-height: 1.6;
+                transition: background-color 0.3s, color 0.3s;
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+            }
+            .container {
+                max-width: 800px;
+                margin: 2em auto;
+                padding: 20px;
+                position: relative;
+                z-index: 1;
+                background: rgba(244, 244, 244, 0.9);
+                border-radius: 15px;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+            header {
+                background: var(--header-footer-bg);
+                color: white;
+                text-align: center;
+                padding: 1.5em 1em;
+                position: relative;
+                z-index: 1;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                box-shadow: var(--header-footer-shadow);
+                border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            }
+            h1 {
+                margin: 0;
+            }
+            h2 {
+                color: var(--secondary-color);
+                border-bottom: 2px solid var(--secondary-color);
+                padding-bottom: 10px;
+                margin-top: 30px;
+            }
+            .card {
+                background: rgba(255, 255, 255, 0.9);
+                border-radius: 12px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+                margin-bottom: 20px;
+                padding: 25px;
+                transition: all 0.3s ease;
+                border: 1px solid rgba(0, 0, 0, 0.05);
+                transform-origin: center;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            .card:hover {
+                transform: translateY(-8px) scale(1.01);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            }
+            .card h3 {
+                color: var(--secondary-color);
+                margin-top: 0;
+            }
+            a {
+                color: var(--secondary-color);
+                text-decoration: none;
+            }
+            a:hover {
+                text-decoration: underline;
+            }
+            .emoji {
+                font-size: 1.5em;
+                margin-right: 5px;
+            }
+            footer {
+                background: var(--header-footer-bg);
+                color: white;
+                text-align: center;
+                padding: 1.5em 1em;
+                position: relative;
+                z-index: 1;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                box-shadow: var(--header-footer-shadow);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                margin-top: auto;
+            }
+            @media (max-width: 600px) {
+                .container {
+                    padding: 10px;
+                }
+            }
+            
+            /* 暗黑模式样式 */
+            body.dark-mode {
+                --primary-color: #e0e0e0;
+                --secondary-color: #4da6ff;
+                --background-color: #2c2c2c;
+                --card-background: #3c3c3c;
+                --header-footer-bg: linear-gradient(135deg, rgba(26, 26, 26, 0.95), rgba(38, 38, 38, 0.95));
+            }
+            body.dark-mode .container {
+                background: rgba(44, 44, 44, 0.9);
+            }
+            body.dark-mode .card {
+                background: rgba(60, 60, 60, 0.9);
+                border: 1px solid rgba(255, 255, 255, 0.05);
+            }
+            body.dark-mode header,
+            body.dark-mode footer {
+                background: rgba(26, 26, 26, 0.9);
+            }
+            #darkModeToggle {
+                background: rgba(255, 255, 255, 0.15);
+                color: white;
+                border: 1px solid rgba(255, 255, 255, 0.2);
+                padding: 8px 16px;
+                border-radius: 20px;
+                cursor: pointer;
+                transition: all 0.3s ease;
+                backdrop-filter: blur(5px);
+                -webkit-backdrop-filter: blur(5px);
+            }
+            #darkModeToggle:hover {
+                background: rgba(255, 255, 255, 0.25);
+                transform: translateY(-2px);
+            }
+            
+            /* 新增的动画和交互样式 */
+            @keyframes wave {
+                50% { rotate: 10deg; }
+            }
+            
+            @keyframes hover {
+                from, to { translate: 0 -5%; }
+                50% { translate: 0 5%; }
+            }
+            
+            .intro {
+                display: flex;
+                justify-content: center;
+                gap: 0.2em;
+                font-size: 2em;
+                margin-top: 20px;
+            }
+            
+            .intro span {
+                display: inline-block;
+            }
+            
+            .intro span:first-child {
+                transform-origin: right bottom;
+                animation: wave 250ms 1s ease 3;
+            }
+            
+            .intro span:last-child {
+                animation: hover 500ms linear infinite;
+            }
+            
+            @keyframes fadeIn {
+                from { opacity: 0; }
+                to { opacity: 1; }
+            }
+            
+            .fade-in {
+                animation: fadeIn 1s ease-out;
+            }
+
+            /* 新增的内容区域和程序信息样式 */
+            .content-section {
+                background: rgba(255, 255, 255, 0.02);
+                border-radius: 20px;
+                padding: 30px;
+                margin-bottom: 40px;
+            }
+
+            .section-divider {
+                position: relative;
+                height: 80px;
+                margin: 40px 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .section-divider::before {
+                content: '';
+                position: absolute;
+                width: 100%;
+                height: 2px;
+                background: linear-gradient(90deg, 
+                    transparent 0%, 
+                    var(--secondary-color) 20%, 
+                    var(--secondary-color) 80%, 
+                    transparent 100%
+                );
+                opacity: 0.3;
+            }
+
+            .program-info {
+                background: linear-gradient(145deg, 
+                    rgba(255, 255, 255, 0.05) 0%, 
+                    rgba(255, 255, 255, 0.1) 100%
+                );
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+
+            .info-title {
+                text-align: center;
+                color: var(--secondary-color);
+                font-size: 1.8em;
+                margin-bottom: 30px;
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+                position: relative;
+                padding-bottom: 15px;
+            }
+
+            .info-title::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 100px;
+                height: 3px;
+                background: var(--secondary-color);
+                border-radius: 2px;
+            }
+
+            .info-card {
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+                gap: 25px;
+                padding: 20px;
+                justify-items: center;
+            }
+
+            .info-item {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 15px;
+                padding: 25px;
+                text-align: center;
+                transition: all 0.3s ease;
+                position: relative;
+                overflow: hidden;
+                min-width: 220px;
+            }
+
+            .info-item:hover {
+                transform: translateY(-5px);
+                background: rgba(255, 255, 255, 0.1);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            }
+
+            .info-item i {
+                font-size: 28px;
+                color: var(--secondary-color);
+                margin-bottom: 15px;
+                transition: transform 0.3s ease;
+            }
+
+            .info-item:hover i {
+                transform: scale(1.2);
+            }
+
+            .info-label {
+                font-weight: bold;
+                color: var(--secondary-color);
+                margin: 10px 0;
+                font-size: 0.9em;
+                text-transform: uppercase;
+                letter-spacing: 1px;
+            }
+
+            .info-value {
+                color: var(--primary-color);
+                font-size: 1.1em;
+                margin-top: 8px;
+                font-family: 'Consolas', monospace;
+                letter-spacing: 0.5px;
+                white-space: nowrap;
+            }
+
+            /* 暗黑模式适配 */
+            body.dark-mode .content-section {
+                background: rgba(0, 0, 0, 0.2);
+            }
+
+            body.dark-mode .program-info {
+                background: linear-gradient(145deg, 
+                    rgba(0, 0, 0, 0.2) 0%, 
+                    rgba(0, 0, 0, 0.3) 100%
+                );
+            }
+
+            body.dark-mode .info-item {
+                background: rgba(0, 0, 0, 0.2);
+            }
+
+            body.dark-mode .info-item:hover {
+                background: rgba(0, 0, 0, 0.3);
+            }
+
+            @media (max-width: 768px) {
+                .content-section {
+                    padding: 15px;
+                }
+                
+                .info-card {
+                    grid-template-columns: 1fr;
+                }
+                
+                .program-info {
+                    margin: 20px 10px;
+                    padding: 20px;
+                }
+                
+                .section-divider {
+                    height: 60px;
+                    margin: 30px 0;
+                }
+            }
+
+            /* 总结卡片样式 */
+            .summary-card {
+                background: linear-gradient(145deg, 
+                    rgba(var(--secondary-color-rgb), 0.05) 0%,
+                    rgba(var(--secondary-color-rgb), 0.1) 100%
+                );
+                border: 2px solid rgba(var(--secondary-color-rgb), 0.1);
+                margin-top: 40px;
+                padding: 30px;
+            }
+
+            .summary-card h2 {
+                text-align: center;
+                font-size: 2em;
+                margin-bottom: 30px;
+                color: var(--secondary-color);
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+
+            .summary-card p {
+                font-size: 1.1em;
+                line-height: 1.8;
+                text-align: justify;
+            }
+
+            /* 暗黑模式适 */
+            body.dark-mode .summary-card {
+                background: linear-gradient(145deg, 
+                    rgba(0, 0, 0, 0.2) 0%, 
+                    rgba(0, 0, 0, 0.3) 100%
+                );
+                border-color: rgba(255, 255, 255, 0.1);
+            }
+
+            .summary-card:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            }
+
+            /* 新增返回顶部按钮样式 */
+            .back-to-top {
+                position: fixed;
+                bottom: 30px;
+                right: 30px;
+                background: var(--secondary-color);
+                color: white;
+                width: 50px;
+                height: 50px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                opacity: 0;
+                transition: all 0.3s ease;
+                z-index: 1000;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+            }
+            
+            .back-to-top.visible {
+                opacity: 1;
+            }
+            
+            .back-to-top:hover {
+                transform: translateY(-5px);
+                box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+            }
+            
+            /* 进度条样式 */
+            .progress-bar {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 0%;
+                height: 3px;
+                background: linear-gradient(to right, #4CAF50, #2196F3);
+                z-index: 1001;
+                transition: width 0.2s ease;
+            }
+            
+            /* 目录导航样式 */
+            .toc {
+                position: fixed;
+                left: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                padding: 20px;
+                border-radius: 15px;
+                max-height: 80vh;
+                overflow-y: auto;
+                z-index: 100;
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                display: none;
+            }
+            
+            .toc.visible {
+                display: block;
+            }
+            
+            .toc-list {
+                list-style: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            .toc-item {
+                margin: 10px 0;
+                opacity: 0.7;
+                transition: all 0.3s ease;
+            }
+            
+            .toc-item:hover {
+                opacity: 1;
+                transform: translateX(5px);
+            }
+            
+            .toc-item.active {
+                opacity: 1;
+                color: var(--secondary-color);
+                font-weight: bold;
+            }
+            
+            .toc-toggle {
+                position: fixed;
+                left: 20px;
+                top: 50%;
+                transform: translateY(-50%);
+                background: var(--secondary-color);
+                color: white;
+                width: 40px;
+                height: 40px;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                cursor: pointer;
+                z-index: 101;
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+                transition: all 0.3s ease;
+            }
+            
+            .toc-toggle:hover {
+                transform: translateY(-50%) scale(1.1);
+            }
+            
+            @media (max-width: 1200px) {
+                .toc, .toc-toggle {
+                    display: none;
+                }
+            }
+
+            /* 新增卡片悬浮效果 */
+            .card {
+                /* 现有样式保持不变... */
+                transform-origin: center;
+                transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+            }
+            
+            .card:hover {
+                transform: translateY(-8px) scale(1.01);
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+            }
+            
+            /* 标题样式优化 */
+            .card h2 {
+                position: relative;
+                padding-left: 15px;
+                margin-bottom: 25px;
+                font-size: 1.6em;
+                letter-spacing: 0.5px;
+            }
+            
+            .card h2::before {
+                content: '';
+                position: absolute;
+                left: 0;
+                top: 0;
+                height: 100%;
+                width: 4px;
+                background: var(--secondary-color);
+                border-radius: 2px;
+            }
+            
+            /* 链接样式美化 */
+            .card a {
+                position: relative;
+                color: var(--secondary-color);
+                text-decoration: none;
+                padding-bottom: 2px;
+            }
+            
+            .card a::after {
+                content: '';
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                width: 0;
+                height: 1px;
+                background: var(--secondary-color);
+                transition: width 0.3s ease;
+            }
+            
+            .card a:hover::after {
+                width: 100%;
+            }
+            
+            /* 列表样式优化 */
+            .card ul {
+                padding-left: 20px;
+                list-style: none;
+            }
+            
+            .card ul li {
+                position: relative;
+                padding: 8px 0;
+                padding-left: 25px;
+                line-height: 1.6;
+            }
+            
+            .card ul li::before {
+                content: '•';
+                position: absolute;
+                left: 0;
+                color: var(--secondary-color);
+                font-size: 1.2em;
+                font-weight: bold;
+            }
+            
+            /* 程序信息卡片美化 */
+            .program-info {
+                background: linear-gradient(145deg, 
+                    rgba(255, 255, 255, 0.05) 0%, 
+                    rgba(255, 255, 255, 0.1) 100%
+                );
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+            }
+            
+            .info-item {
+                position: relative;
+                overflow: hidden;
+            }
+            
+            .info-item::before {
+                content: '';
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(
+                    circle,
+                    rgba(255, 255, 255, 0.1) 0%,
+                    transparent 70%
+                );
+                opacity: 0;
+                transition: opacity 0.3s ease;
+            }
+            
+            .info-item:hover::before {
+                opacity: 1;
+            }
+            
+            /* 滚动条美化 */
+            ::-webkit-scrollbar {
+                width: 8px;
+                height: 8px;
+            }
+            
+            ::-webkit-scrollbar-track {
+                background: rgba(0, 0, 0, 0.1);
+                border-radius: 4px;
+            }
+            
+            ::-webkit-scrollbar-thumb {
+                background: var(--secondary-color);
+                border-radius: 4px;
+            }
+            
+            ::-webkit-scrollbar-thumb:hover {
+                background: #0052a3;
+            }
+            
+            /* 页面加载动画 */
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+            
+            .content-section {
+                animation: fadeInUp 0.8s ease-out;
+            }
+            
+            /* 目录样式优化 */
+            .toc {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            }
+            
+            .toc-item a {
+                display: block;
+                padding: 8px 12px;
+                color: var(--primary-color);
+                border-radius: 6px;
+                transition: all 0.3s ease;
+            }
+            
+            .toc-item a:hover {
+                background: rgba(255, 255, 255, 0.1);
+                transform: translateX(5px);
+            }
+            
+            .toc-item.active a {
+                background: var(--secondary-color);
+                color: white;
+            }
+            
+            /* 总结卡片特殊样式 */
+            .summary-card {
+                background: linear-gradient(145deg,
+                    rgba(var(--secondary-color-rgb), 0.05) 0%,
+                    rgba(var(--secondary-color-rgb), 0.1) 100%
+                );
+                border: 2px solid rgba(var(--secondary-color-rgb), 0.1);
+            }
+            
+            .summary-card h2 {
+                text-align: center;
+                font-size: 2em;
+                margin-bottom: 30px;
+                color: var(--secondary-color);
+                text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            }
+            
+            /* 响应式优化 */
+            @media (max-width: 768px) {
+                .card {
+                    padding: 15px;
+                }
+                
+                .card h2 {
+                    font-size: 1.4em;
+                }
+                
+                .toc {
+                    display: none;
+                }
+                
+                .program-info {
+                    margin: 20px 10px;
+                }
+            }
+
+            /* 标题样式美化 */
+            h1, h2 {
+                position: relative;
+                padding: 15px 25px;
+                margin: 0 0 25px 0;
+                background: linear-gradient(135deg, rgba(0, 102, 204, 0.1), rgba(0, 82, 164, 0.05));
+                border-radius: 10px;
+                border-left: 5px solid var(--secondary-color);
+                box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+                font-weight: 600;
+                letter-spacing: 0.5px;
+                transition: all 0.3s ease;
+            }
+
+            h1:hover, h2:hover {
+                transform: translateX(5px);
+                background: linear-gradient(135deg, rgba(0, 102, 204, 0.15), rgba(0, 82, 164, 0.1));
+            }
+
+            /* 特别为红框标记的标题添加样式 */
+            .main-title {
+                background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                border-radius: 15px;
+                padding: 20px;
+                margin-bottom: 30px;
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            }
+
+            .main-title h2 {
+                margin: 0;
+                padding: 0;
+                border: none;
+                background: none;
+                box-shadow: none;
+                color: var(--secondary-color);
+                font-size: 1.8em;
+            }
+
+            .main-title:hover {
+                transform: translateY(-3px);
+                box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
+            }
+
+            /* 为emoji添加动画效果 */
+            .main-title .emoji {
+                font-size: 1.5em;
+                display: inline-block;
+                transition: transform 0.3s ease;
+            }
+
+            .main-title:hover .emoji {
+                transform: scale(1.2) rotate(10deg);
+            }
+        </style>
+        
+            
+        <script type="x-shader/x-fragment">#version 300 es
+        precision highp float;
+        out vec4 O;
+        uniform float time;
+        uniform vec2 resolution;
+        #define FC gl_FragCoord.xy
+        #define R resolution
+        #define T (time * 0.15)
+        #define hue(a) (.5+.5*cos(6.3*(a)+vec3(0,83,21)))
+        float rnd(float a) {
+            vec2 p=fract(a*vec2(12.9898,78.233)); p+=dot(p,p*345.);
+            return fract(p.x*p.y);
+        }
+        vec3 pattern(vec2 uv) {
+            vec3 col=vec3(0);
+            for (float i=.0; i++<15.;) {
+                float a=rnd(i);
+                vec2 n=vec2(a,fract(a*34.56)), p=sin(n*(T+7.)+T*.5);
+                float d=dot(uv-p,uv-p);
+                col+=.0006/d*hue(dot(uv,uv)+i*.125+T);
+            }
+            return col * 0.8;
+        }
+        void main(void) {
+            vec2 uv=(FC-.5*R)/min(R.x,R.y);
+            vec3 col=vec3(0);
+            float s=2.4,
+            a=atan(uv.x,uv.y),
+            b=length(uv);
+            uv=vec2(a*5./6.28318,.05/tan(b)+T);
+            uv=fract(uv)-.5;
+            col+=pattern(uv*s);
+            O=vec4(col,1);
+        }</script>
+        
+        </head>
+        <body>
+            <div class="progress-bar"></div>
+            <div class="toc-toggle">
+                <i class="fas fa-list"></i>
+            </div>
+            <nav class="toc">
+                <ul class="toc-list"></ul>
+            </nav>
+            <header>
+                <h1>🚀 Reddit AI 探索者 🤖</h1>
+                <button id="darkModeToggle">切换到暗色模式</button>
+            </header>
+            <div class="container">
+                <div class="main-title">
+                    <span class="emoji">🌟</span>
+                    <h2>AI's Wild West: The Latest Frontier in Tech-savvy Shenanigans</h2>
+                    <span class="emoji">✨</span>
+                </div>
+                <div class='container main-content'><div class='content-section'><div class='card'><h2>AI's Wild West: Saddle Up for the Latest Innovations! 🤠🚀</h2>
+<p>Imagine a rodeo where the bulls are algorithms and the cowboys are coders. Welcome to the wild world of AI, where the latest projects are as thrilling as a double backflip on a mechanical bull! 🐂💻 Hold onto your hats, because we're about to dive into the most exciting AI developments straight from the LocalLLama corral. Yeehaw!</p>
+</div><div class='card'><h2>1. Qwen 32B Coder-Ins vs 72B-Ins: The Leetcode Showdown 🤖🔥</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gr35xp/qwen_32b_coderins_vs_72bins_on_the_latest/">Link</a></li>
+<li>Facts: The 72B model proved it's not just about size, but skill, outperforming the 32B model in solving Leetcode problems.</li>
+<li>Personal thoughts: This face-off shows that bigger models can indeed be better, but at what cost? 🤔💸</li>
+<li>Description: The 72B model's superior performance disrupts the notion that smaller models are sufficient for complex tasks.</li>
+<li>Help for users: If you're tackling tough coding challenges, consider the power of larger models.</li>
+</ul>
+</div><div class='card'><h2>2. Quantizing Qwen2.5-Coder:32b - The Speed vs. Performance Tango 🕺💨</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gqztju/has_anyone_done_a_quant_comparison_for/">Link</a></li>
+<li>Facts: Users explored different quantization settings, finding a sweet spot between speed and performance.</li>
+<li>Personal thoughts: It's like choosing between a sports car and a truck – speed or power? 🚗🚚</li>
+<li>Description: This discussion highlights the trade-offs in AI, emphasizing the importance of balancing efficiency and effectiveness.</li>
+<li>Help for users: Experiment with quantization to find the best performance for your specific needs.</li>
+</ul>
+</div><div class='card'><h2>3. MMLU-Pro Score vs Inference Costs: The Budget Battle Royale 🤑🛡️</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gqk300/nvidia_rtx_5090_with_32gb_of_ram_rumored_to_be/">Link</a></li>
+<li>Facts: Qwen2.5 models offer impressive cost-effectiveness, while Claude 3.5 Sonnet shines in performance but at a higher cost.</li>
+<li>Personal thoughts: It's like choosing between a gourmet meal and fast food – both fill you up, but in different ways. 🍔🍽️</li>
+<li>Description: This analysis underscores the importance of considering both performance and cost in AI model selection.</li>
+<li>Help for users: Evaluate your budget and performance needs to choose the right model for your projects.</li>
+</ul>
+</div><div class='card'><h2>4. Nvidia RTX 5090: The GPU Goliath on the Horizon 🌄💪</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gqk300/nvidia_rtx_5090_with_32gb_of_ram_rumored_to_be/">Link</a></li>
+<li>Facts: The upcoming RTX 5090 promises to boost AI inference and training capabilities significantly.</li>
+<li>Personal thoughts: It's like waiting for the next superhero movie – expectations are sky-high! 🦸‍♂️🌟</li>
+<li>Description: The potential of this GPU could revolutionize AI development, making high-performance computing more accessible.</li>
+<li>Help for users: Keep an eye on this GPU if you're planning to upgrade your AI hardware.</li>
+</ul>
+</div><div class='card'><h2>5. TinyTroupe: The LLM-Powered Multiagent Persona Party 🎭🤖</h2>
+<ul>
+<li>Github: <a href="https://github.com/microsoft/TinyTroupe">Link</a></li>
+<li>Facts: TinyTroupe simulates realistic human behavior through artificial agents, enhancing various business scenarios.</li>
+<li>Personal thoughts: It's like having a team of virtual colleagues who never need coffee breaks! ☕😴</li>
+<li>Description: This library opens up new possibilities for AI in business, from advertisement testing to software evaluation.</li>
+<li>Help for users: Explore TinyTroupe for innovative ways to apply AI in your business operations.</li>
+</ul>
+</div><div class='card'><h2>6. Privacy-First Writing Tools: The Native LLM Revolution 📝🔒</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gqzx9q/yet_another_writing_tools_purely_privacy_native/">Link</a></li>
+<li>Facts: A new writing tool prioritizes privacy and supports various LLM models, all while being open-source.</li>
+<li>Personal thoughts: It's like having a secret diary that writes itself – private and powerful! 📖🔐</li>
+<li>Description: This tool disrupts the writing software market by emphasizing privacy and native technologies.</li>
+<li>Help for users: Check out this tool if you value privacy and flexibility in your writing applications.</li>
+</ul>
+</div><div class='card'><h2>7. Qwen2.5-Coder-1.5B on RTX 3050 Ti: The David vs. Goliath Story 🗡️🦾</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gr27o3/running_qwen25coder15b_for_realtime_code/">Link</a></li>
+<li>Facts: Users discuss the feasibility of running Qwen2.5-Coder-1.5B on a GPU with limited VRAM.</li>
+<li>Personal thoughts: It's like trying to fit a giant into a tiny house – challenging but not impossible! 🏠🤯</li>
+<li>Description: This exploration highlights the potential of smaller GPUs in handling advanced AI tasks.</li>
+<li>Help for users: Consider alternative models and approaches if you're working with limited hardware resources.</li>
+</ul>
+</div><div class='card'><h2>8. ArliAI RPMax v1.3: The Creativity Catalyst 🎨🧠</h2>
+<ul>
+<li>Huggingface: <a href="https://huggingface.co/ArliAI/Qwen2.5-32B-ArliAI-RPMax-v1.3">Link</a></li>
+<li>Facts: The new Qwen2.5 32B based ArliAI RPMax v1.3 model aims to reduce repetition and enhance creativity in AI-generated text.</li>
+<li>Personal thoughts: It's like giving AI a shot of artistic adrenaline – watch the creativity flow! 💥🖌️</li>
+<li>Description: This model could revolutionize content creation by making AI-generated text more diverse and imaginative.</li>
+<li>Help for users: Experiment with this model to add a creative flair to your AI-generated content.</li>
+</ul>
+</div><div class='card'><h2>9. ollama llama3.2-vision:11b's Slowdown Saga 🐌👀</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gr5se3/ollama_llama32vision11b_20x_slower_than_llama318b/">Link</a></li>
+<li>Facts: The llama3.2-vision:11b model experiences a significant slowdown compared to llama3.1:8b.</li>
+<li>Personal thoughts: It's like trading a cheetah for a tortoise – more features, but at a snail's pace! 🐢🐆</li>
+<li>Description: This performance issue highlights the challenges in balancing advanced features with speed in AI models.</li>
+<li>Help for users: Consider the trade-offs between features and performance when choosing a vision model.</li>
+</ul>
+</div><div class='card'><h2>10. LLMs with Search: The Information Gold Rush 🌟🔍</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gqxt5h/llms_with_search/">Link</a></li>
+<li>Facts: Users discuss integrating LLMs with web search capabilities, sharing experiences and best practices.</li>
+<li>Personal thoughts: It's like giving AI a magnifying glass to find needles in the digital haystack! 🕵️‍♂️🌾</li>
+<li>Description: This integration can significantly enhance the capabilities of LLM-based applications, making them more informative and useful.</li>
+<li>Help for users: Explore open-source tools and best practices to implement search functionality in your LLM projects.</li>
+</ul>
+</div><div class='card'><h2>11. gemma2 9b vs hermes3 8b: The Model Showdown 🥊🤖</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gr1xik/comparison_between_gemma2_9b_and_hermes3_8b_which/">Link</a></li>
+<li>Facts: Users compare the performance of gemma2 9b and hermes3 8b models, seeking opinions on their suitability for specific tasks.</li>
+<li>Personal thoughts: It's like a culinary battle between two chefs – which dish will win your taste buds? 🍳🥘</li>
+<li>Description: This comparison helps users make informed decisions based on the strengths and weaknesses of each model.</li>
+<li>Help for users: Consider the specific requirements of your tasks when choosing between these models.</li>
+</ul>
+</div><div class='card'><h2>12. Vector Embeddings in LLMs: The Data Deep Dive 🌊📊</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gqztfb/passing_vector_embeddings_as_input_to_llms/">Link</a></li>
+<li>Facts: The discussion explores the potential benefits and challenges of passing vector embeddings as input to LLMs.</li>
+<li>Personal thoughts: It's like teaching AI to swim in a sea of data – exciting but a bit daunting! 🏊‍♂️🤖</li>
+<li>Description: This approach could enhance the context and accuracy of AI responses, opening new avenues for data-driven applications.</li>
+<li>Help for users: Experiment with vector embeddings to see if they improve the performance of your LLM models.</li>
+</ul>
+</div><div class='card'><h2>13. Best Practices for Finetuning LLMs: The Optimization Odyssey 🛠️🚀</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gr2kag/best_practices_for_finetuning_llms/">Link</a></li>
+<li>Facts: Users discuss Lora, fine-tuning, and Dora techniques for optimizing LLMs.</li>
+<li>Personal thoughts: It's like tuning a guitar – get it right, and the music is magic! 🎸🎶</li>
+<li>Description: These best practices can significantly enhance the performance and accuracy of LLMs for specific tasks.</li>
+<li>Help for users: Choose the right finetuning technique based on your specific requirements and goals.</li>
+</ul>
+</div><div class='card'><h2>14. Thoughts on Qwen2.5-14B: The Performance Puzzle 🧩🤔</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gqtx2w/thoughts_on_qwen2514b/">Link</a></li>
+<li>Facts: Users share their opinions on the Qwen2.5-14B model's performance in various tasks.</li>
+<li>Personal thoughts: It's like piecing together a jigsaw puzzle – each opinion adds a piece to the bigger picture. 🧩🌍</li>
+<li>Description: This discussion provides valuable insights into the strengths and potential applications of the Qwen2.5-14B model.</li>
+<li>Help for users: Consider user experiences and feedback when evaluating this model for your projects.</li>
+</ul>
+</div><div class='card'><h2>15. The RAG Stack Rodeo: The Tool Tango 🕺🔧</h2>
+<ul>
+<li>Reddit: <a href="https://www.reddit.com/r/LocalLLaMA/comments/1gqib5n/whats_your_rag_stack/">Link</a></li>
+<li>Facts: Users share their preferred tools and libraries for building Retrieval-Augmented Generation (RAG) systems.</li>
+<li>Personal thoughts: It's like a dance-off where the best tools get to shine! 💃🕺</li>
+<li>Description: This discussion highlights the diverse range of tools available for building effective RAG systems.</li>
+<li>Help for users: Explore different RAG stacks to find the one that best fits your project needs.</li>
+</ul>
+
+<p>In the grand rodeo of AI, these projects are the bucking broncos and wild mustangs, each with its own flair and power. From models showdowns to GPU giants, the AI landscape is as thrilling as a rodeo finale. So, hold on tight, and let's see where these innovations take us next! 🐴🌟 Yeehaw! 🚀🤠
+```</p>
+
+<p>This revised version maintains the witty and humorous tone while ensuring the content is concise, engaging, and technically insightful. Each section is clearly structured to provide facts, personal thoughts, descriptions, and helpful advice, adhering to the specified markdown format. The introduction and summary are vivid and memorable, capturing the excitement and significance of the AI developments discussed.</p>
+
+<hr />
+</div></div><div class='section-divider'></div>
+        <div class='program-info'>
+            <h2 class='info-title'>程序运行信息</h2>
+            <div class='info-card'>
+                
+            <div class='info-item'>
+                <i class='fas fa-play-circle'></i>
+                <span class='info-label'>开始时���</span>
+                <span class='info-value'>2024-11-14 22:33:56</span>
+            </div>
+            <div class='info-item'>
+                <i class='fas fa-stop-circle'></i>
+                <span class='info-label'>结束时间</span>
+                <span class='info-value'>2024-11-14 22:37:16</span>
+            </div>
+            <div class='info-item'>
+                <i class='fas fa-clock'></i>
+                <span class='info-label'>运行时长</span>
+                <span class='info-value'>199.85 秒</span>
+            </div>
+            <div class='info-item'>
+                <i class='fas fa-microchip'></i>
+                <span class='info-label'>使用模型</span>
+                <span class='info-value'>glm-4-plus</span>
+            </div>
+        
+            </div>
+        </div>
+        </div>
+            </div>
+            <footer>
+                <p>生成于 2024-11-14 22:37:16</p>
+            </footer>
+            <div class="back-to-top">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+            <script>
+                // 将所有功能包装在一个函数中
+                function initializePage() {
+                    // 暗色模式切换功能
+                    const darkModeToggle = document.getElementById('darkModeToggle');
+                    if (darkModeToggle) {
+                        darkModeToggle.addEventListener('click', function() {
+                            document.body.classList.toggle('dark-mode');
+                            this.textContent = document.body.classList.contains('dark-mode') 
+                                ? '切换到亮色模式' 
+                                : '切换到暗色模式';
+                        });
+                    }
+
+                    // 目录功能
+                    const tocToggle = document.querySelector('.toc-toggle');
+                    const toc = document.querySelector('.toc');
+                    
+                    if (tocToggle && toc) {
+                        tocToggle.addEventListener('click', function() {
+                            toc.classList.toggle('visible');
+                        });
+                    }
+                    
+                    // 生成目录内容
+                    function generateToc() {
+                        const headings = document.querySelectorAll('.card h2');
+                        const tocList = document.querySelector('.toc-list');
+                        
+                        if (!tocList) return;
+                        
+                        tocList.innerHTML = '';
+                        
+                        headings.forEach((heading, index) => {
+                            heading.id = `heading-${index}`;
+                            
+                            const li = document.createElement('li');
+                            li.classList.add('toc-item');
+                            
+                            const a = document.createElement('a');
+                            a.href = `#heading-${index}`;
+                            a.textContent = heading.textContent;
+                            a.addEventListener('click', function(e) {
+                                e.preventDefault();
+                                heading.scrollIntoView({ behavior: 'smooth' });
+                            });
+                            
+                            li.appendChild(a);
+                            tocList.appendChild(li);
+                        });
+                    }
+                    
+                    // 更新目录激活状态
+                    function updateTocActiveState() {
+                        const headings = document.querySelectorAll('.card h2');
+                        const tocItems = document.querySelectorAll('.toc-item');
+                        
+                        headings.forEach((heading, index) => {
+                            const rect = heading.getBoundingClientRect();
+                            if (rect.top >= 0 && rect.top <= window.innerHeight * 0.5) {
+                                tocItems.forEach(item => item.classList.remove('active'));
+                                tocItems[index].classList.add('active');
+                            }
+                        });
+                    }
+                    
+                    generateToc();
+                    window.addEventListener('scroll', updateTocActiveState);
+
+                    // 返回顶部功能和进度条
+                    const backToTop = document.querySelector('.back-to-top');
+                    window.addEventListener('scroll', () => {
+                        if (window.scrollY > 300) {
+                            backToTop.classList.add('visible');
+                        } else {
+                            backToTop.classList.remove('visible');
+                        }
+                        
+                        const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+                        const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+                        const scrolled = (winScroll / height) * 100;
+                        document.querySelector('.progress-bar').style.width = scrolled + '%';
+                    });
+
+                    // 返回顶部点击事件
+                    backToTop.addEventListener('click', () => {
+                        window.scrollTo({
+                            top: 0,
+                            behavior: 'smooth'
+                        });
+                    });
+
+                    // 添加淡入效果
+                    const cards = document.querySelectorAll('.card');
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                entry.target.classList.add('fade-in');
+                                observer.unobserve(entry.target);
+                            }
+                        });
+                    }, { threshold: 0.1 });
+                    
+                    cards.forEach(card => observer.observe(card));
+                }
+
+                // 在 DOM 加载完成后初始化所有功能
+                document.addEventListener('DOMContentLoaded', initializePage);
+            </script>
+            
+        <script>
+        window.onload = init;
+        function init() {
+            let renderer, canvas;
+            const dpr = Math.max(1, .5*devicePixelRatio);
+            
+            canvas = document.createElement("canvas");
+            canvas.style.position = 'fixed';
+            canvas.style.top = '0';
+            canvas.style.left = '0';
+            canvas.style.width = '100%';
+            canvas.style.height = '100%';
+            canvas.style.zIndex = '-1';
+            document.body.insertBefore(canvas, document.body.firstChild);
+            
+            const resize = () => {
+                const { innerWidth: width, innerHeight: height } = window;
+                canvas.width = width * dpr;
+                canvas.height = height * dpr;
+                if (renderer) {
+                    renderer.updateScale(dpr);
+                }
+            };
+            
+            const source = document.querySelector("script[type='x-shader/x-fragment']").textContent;
+            canvas.style.userSelect = "none";
+            renderer = new Renderer(canvas, dpr);
+            renderer.setup();
+            renderer.init();
+            resize();
+            if (renderer.test(source) === null) {
+                renderer.updateShader(source);
+            }
+            window.onresize = resize;
+            const loop = (now) => {
+                renderer.render(now);
+                requestAnimationFrame(loop);
+            };
+            loop(0);
+        }
+        
+        class Renderer {
+            #vertexSrc = "#version 300 es\nprecision highp float;\nin vec4 position;\nvoid main(){gl_Position=position;}";
+            #fragmtSrc = "#version 300 es\nprecision highp float;\nout vec4 O;\nuniform float time;\nuniform vec2 resolution;\nvoid main() {\n\tvec2 uv=gl_FragCoord.xy/resolution;\n\tO=vec4(uv,sin(time)*.5+.5,1);\n}";
+            #vertices = [-1, 1, -1, -1, 1, 1, 1, -1];
+            
+            constructor(canvas, scale) {
+                this.canvas = canvas;
+                this.scale = scale;
+                this.gl = canvas.getContext("webgl2");
+                this.gl.viewport(0, 0, canvas.width * scale, canvas.height * scale);
+                this.shaderSource = this.#fragmtSrc;
+                this.mouseCoords = [0, 0];
+                this.pointerCoords = [0, 0];
+                this.nbrOfPointers = 0;
+            }
+
+            get defaultSource() { 
+                return this.#fragmtSrc;
+            }
+
+            updateShader(source) {
+                this.reset();
+                this.shaderSource = source;
+                this.setup();
+                this.init();
+            }
+
+            updateScale(scale) {
+                this.scale = scale;
+                this.gl.viewport(0, 0, this.canvas.width * scale, this.canvas.height * scale);
+            }
+
+            compile(shader, source) {
+                const gl = this.gl;
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    console.error(gl.getShaderInfoLog(shader));
+                }
+            }
+
+            test(source) {
+                let result = null;
+                const gl = this.gl;
+                const shader = gl.createShader(gl.FRAGMENT_SHADER);
+                gl.shaderSource(shader, source);
+                gl.compileShader(shader);
+                if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                    result = gl.getShaderInfoLog(shader);
+                }
+                gl.deleteShader(shader);
+                return result;
+            }
+
+            reset() {
+                const gl = this.gl;
+                if (this.program) {
+                    if (this.vs) {
+                        gl.detachShader(this.program, this.vs);
+                        gl.deleteShader(this.vs);
+                    }
+                    if (this.fs) {
+                        gl.detachShader(this.program, this.fs);
+                        gl.deleteShader(this.fs);
+                    }
+                    gl.deleteProgram(this.program);
+                }
+            }
+
+            setup() {
+                const gl = this.gl;
+                this.vs = gl.createShader(gl.VERTEX_SHADER);
+                this.fs = gl.createShader(gl.FRAGMENT_SHADER);
+                this.compile(this.vs, this.#vertexSrc);
+                this.compile(this.fs, this.shaderSource);
+                this.program = gl.createProgram();
+                gl.attachShader(this.program, this.vs);
+                gl.attachShader(this.program, this.fs);
+                gl.linkProgram(this.program);
+            }
+
+            init() {
+                const gl = this.gl;
+                this.buffer = gl.createBuffer();
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+                gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(this.#vertices), gl.STATIC_DRAW);
+                const position = gl.getAttribLocation(this.program, "position");
+                gl.enableVertexAttribArray(position);
+                gl.vertexAttribPointer(position, 2, gl.FLOAT, false, 0, 0);
+                this.program.resolution = gl.getUniformLocation(this.program, "resolution");
+                this.program.time = gl.getUniformLocation(this.program, "time");
+            }
+
+            render(now = 0) {
+                const gl = this.gl;
+                gl.clearColor(0, 0, 0, 1);
+                gl.clear(gl.COLOR_BUFFER_BIT);
+                gl.useProgram(this.program);
+                gl.bindBuffer(gl.ARRAY_BUFFER, this.buffer);
+                gl.uniform2f(this.program.resolution, this.canvas.width, this.canvas.height);
+                gl.uniform1f(this.program.time, now * 0.001);
+                gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
+            }
+        }
+        </script>
+        
+        </body>
+        </html>
+        

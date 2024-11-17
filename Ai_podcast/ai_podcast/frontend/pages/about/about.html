@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>关于我们 - Knowledge to Podcast</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="../../components/nav/nav.css">
+    <link rel="stylesheet" href="../../components/about/about.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/background.js" defer></script>
+    <script src="/js/common.js" defer></script>
+</head>
+<body>
+    <!-- SVG 滤镜 -->
+    <svg class="hidden">
+        <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+            <feBlend in="SourceGraphic" in2="goo" />
+        </filter>
+    </svg>
+
+    <!-- 渐变背景 -->
+    <div class="gradient-bg">
+        <div class="gradients-container">
+            <div class="g1"></div>
+            <div class="g2"></div>
+            <div class="g3"></div>
+            <div class="g4"></div>
+            <div class="g5"></div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <div id="nav-container"></div>
+
+    <div class="about-container">
+        <!-- 头部横幅 -->
+        <div class="about-header">
+            <h1>关于我们</h1>
+            <p class="subtitle">让知识传播更加生动有趣</p>
+        </div>
+
+        <!-- 我们的故事 -->
+        <section class="about-section">
+            <h2>
+                <i data-lucide="book-open" class="section-icon"></i>
+                我们的故事
+            </h2>
+            <div class="story-content">
+                <div class="story-text">
+                    <p>Knowledge to Podcast 诞生于对知识传播方式的思考。在信息爆炸的时代，我们希望通过 AI 技术，让知识的获取和分享变得更加轻松自然。</p>
+                    <p>我们相信，每一份知识都值得被更好地传播，每一个想法都应该有更生动的表达方式。通过将文字转化为对话式播客，我们让知识的传递不再枯燥。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 核心价值 -->
+        <section class="about-section">
+            <h2>
+                <i data-lucide="target" class="section-icon"></i>
+                核心价值
+            </h2>
+            <div class="values-grid">
+                <div class="value-card">
+                    <i data-lucide="zap" class="value-icon"></i>
+                    <h3>创新科技</h3>
+                    <p>运用最新的 AI 技术，为用户提供智能化的内容转换服务。</p>
+                </div>
+                <div class="value-card">
+                    <i data-lucide="users" class="value-icon"></i>
+                    <h3>用户至上</h3>
+                    <p>始终以用户需求为中心，持续优化产品体验。</p>
+                </div>
+                <div class="value-card">
+                    <i data-lucide="shield" class="value-icon"></i>
+                    <h3>品质保证</h3>
+                    <p>确保生成内容的质量，为用户提供专业水准的播客效果。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 发展历程 -->
+        <section class="about-section">
+            <h2>
+                <i data-lucide="milestone" class="section-icon"></i>
+                发展历程
+            </h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>2024年1月</h3>
+                        <p>Knowledge to Podcast 正式上线</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>2024年3月</h3>
+                        <p>推出多语言支持，支持中英文转换</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-dot"></div>
+                    <div class="timeline-content">
+                        <h3>2024年6月</h3>
+                        <p>计划推出企业版服务</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 团队介绍 -->
+        <section class="about-section">
+            <h2>
+                <i data-lucide="users" class="section-icon"></i>
+                核心团队
+            </h2>
+            <div class="team-grid">
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <i data-lucide="user" class="avatar-icon"></i>
+                    </div>
+                    <h3>张三</h3>
+                    <p class="team-role">创始人 & CEO</p>
+                    <p class="team-desc">前 Google AI 研究员，拥有十年 AI 领域经验</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <i data-lucide="user" class="avatar-icon"></i>
+                    </div>
+                    <h3>李四</h3>
+                    <p class="team-role">技术总监</p>
+                    <p class="team-desc">专注于语音合成技术研发，曾主导多个大型 AI 项目</p>
+                </div>
+                <div class="team-card">
+                    <div class="team-avatar">
+                        <i data-lucide="user" class="avatar-icon"></i>
+                    </div>
+                    <h3>王五</h3>
+                    <p class="team-role">产品总监</p>
+                    <p class="team-desc">多年产品设计经验，致力于打造极致用户体验</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 联系我们 -->
+        <section class="about-section">
+            <h2>
+                <i data-lucide="mail" class="section-icon"></i>
+                联系我们
+            </h2>
+            <div class="contact-grid">
+                <div class="contact-info">
+                    <div class="contact-item">
+                        <i data-lucide="mail" class="contact-icon"></i>
+                        <div>
+                            <h3>商务合作</h3>
+                            <p>business@example.com</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i data-lucide="phone" class="contact-icon"></i>
+                        <div>
+                            <h3>客服热线</h3>
+                            <p>400-123-4567</p>
+                        </div>
+                    </div>
+                    <div class="contact-item">
+                        <i data-lucide="map-pin" class="contact-icon"></i>
+                        <div>
+                            <h3>公司地址</h3>
+                            <p>北京市海淀区科技园区</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 加载导航组件
+        fetch('../../components/nav/nav.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('nav-container').innerHTML = html;
+                lucide.createIcons();
+            });
+    </script>
+</body>
+</html> 

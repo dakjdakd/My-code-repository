@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录/注册 - AI播客生成器</title>
+    <link rel="icon" type="image/jpeg" href="../../static/images/tubiao.jpg">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="../../components/nav/nav.css">
+    <link rel="stylesheet" href="../../components/auth/auth.css">
+    <script src="/js/background.js" defer></script>
+    <script src="/js/common.js" defer></script>
+</head>
+<body>
+    <!-- SVG 滤镜 -->
+    <svg class="hidden">
+        <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+            <feBlend in="SourceGraphic" in2="goo" />
+        </filter>
+    </svg>
+
+    <!-- 渐变背景 -->
+    <div class="gradient-bg">
+        <div class="gradients-container">
+            <div class="g1"></div>
+            <div class="g2"></div>
+            <div class="g3"></div>
+            <div class="g4"></div>
+            <div class="g5"></div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <div id="nav-container"></div>
+
+    <!-- 主要内容区域 -->
+    <div class="container mx-auto px-4 py-12 relative z-10">
+        <div class="max-w-md mx-auto">
+            <!-- Logo和标题 -->
+            <div class="text-center mb-8">
+                <div class="flex justify-center mb-4">
+                    <i data-lucide="brain" class="w-16 h-16 text-white opacity-90"></i>
+                </div>
+                <h1 class="text-3xl font-bold text-white mb-2">Knowledge to Podcast</h1>
+                <p class="text-gray-300 text-lg welcome-text">欢迎回来，请登录您的账号</p>
+            </div>
+
+            <!-- 认证容器 -->
+            <div class="bg-white bg-opacity-10 backdrop-blur-lg rounded-xl p-8 shadow-2xl border border-white border-opacity-20">
+                <!-- 切换标签 -->
+                <div class="auth-tabs">
+                    <button class="auth-tab active" data-tab="login">登录</button>
+                    <button class="auth-tab" data-tab="register">注册</button>
+                </div>
+
+                <!-- 登录表单 -->
+                <form id="loginForm" class="auth-form active">
+                    <div class="form-group">
+                        <label>
+                            <i data-lucide="mail" class="form-icon"></i>
+                            <input type="email" id="loginEmail" name="email" placeholder="邮箱地址" required>
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            <i data-lucide="lock" class="form-icon"></i>
+                            <input type="password" id="loginPassword" name="password" placeholder="密码" required>
+                        </label>
+                    </div>
+                    <div class="form-options">
+                        <label class="remember-me">
+                            <input type="checkbox" name="remember">
+                            <span class="text-white">记住我</span>
+                        </label>
+                        <a href="#" class="forgot-password">忘记密码？</a>
+                    </div>
+                    <button type="submit" class="auth-submit">登录</button>
+                </form>
+
+                <!-- 注册表单 -->
+                <form id="registerForm" class="auth-form hidden">
+                    <!-- 邮箱地址 -->
+                    <div class="form-group">
+                        <label>
+                            <i data-lucide="mail" class="form-icon"></i>
+                            <input type="email" id="registerEmail" name="email" placeholder="邮箱地址" required
+                                   class="bg-transparent text-white text-lg placeholder-gray-300">
+                        </label>
+                    </div>
+                    <!-- 输入密码 -->
+                    <div class="form-group">
+                        <label>
+                            <i data-lucide="lock" class="form-icon"></i>
+                            <input type="password" id="registerPassword" name="password" placeholder="输入密码" required
+                                   class="bg-transparent text-white text-lg placeholder-gray-300">
+                        </label>
+                    </div>
+                    <!-- 再次输入密码 -->
+                    <div class="form-group">
+                        <label>
+                            <i data-lucide="lock" class="form-icon"></i>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="再次输入相同密码" required
+                                   class="bg-transparent text-white text-lg placeholder-gray-300">
+                        </label>
+                    </div>
+                    <!-- 验证码 -->
+                    <div class="form-group verification-group">
+                        <label>
+                            <i data-lucide="shield-check" class="form-icon"></i>
+                            <input type="text" id="verificationCode" name="verificationCode" placeholder="验证码" required
+                                   class="bg-transparent text-white text-lg placeholder-gray-300">
+                            <button type="button" class="get-code-btn">获取验证码</button>
+                        </label>
+                    </div>
+                    <!-- 注册按钮 -->
+                    <button type="submit" class="auth-submit w-full py-3 text-lg bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg hover:from-purple-700 hover:to-pink-700">
+                        注册
+                    </button>
+                </form>
+
+                <!-- 社交登录 -->
+                <div class="mt-8">
+                    <div class="relative">
+                        <div class="absolute inset-0 flex items-center">
+                            <div class="w-full border-t border-white border-opacity-20"></div>
+                        </div>
+                        <div class="relative flex justify-center text-base">
+                            <span class="px-4 bg-transparent text-white">或使用以下方式</span>
+                        </div>
+                    </div>
+
+                    <div class="mt-6 grid grid-cols-3 gap-4">
+                        <button class="social-btn">
+                            <i data-lucide="chrome" class="w-6 h-6"></i>
+                            <span>Google</span>
+                        </button>
+                        <button class="social-btn">
+                            <i data-lucide="github" class="w-6 h-6"></i>
+                            <span>GitHub</span>
+                        </button>
+                        <button class="social-btn">
+                            <i data-lucide="message-circle" class="w-6 h-6"></i>
+                            <span>微信</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="../../components/nav/nav.js"></script>
+    <script src="../../components/auth/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 初始化图标
+            lucide.createIcons();
+            
+            // 加载导航栏
+            const navContainer = document.getElementById('nav-container');
+            fetch('/components/nav/nav.html')
+                .then(response => response.text())
+                .then(html => {
+                    navContainer.innerHTML = html;
+                    lucide.createIcons();
+                    new Navigation();
+                })
+                .catch(error => console.error('Error loading nav:', error));
+                
+            // 处理 URL hash
+            if (window.location.hash === '#register') {
+                const registerTab = document.querySelector('[data-tab="register"]');
+                if (registerTab) {
+                    registerTab.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html> 

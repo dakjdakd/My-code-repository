@@ -28,6 +28,13 @@ elif MODEL_NAME == "deepseek":
             max_tokens=5000
         )
     
+elif MODEL_NAME == "google":
+    llm = ChatOpenAI(
+            model="gemini-1.5-pro",
+            openai_api_key="AIzaSyC6EIuxGxY2wKfS3tABNAuUU4yXHx0zY_M",
+            openai_api_base="https://generativelanguage.googleapis.com/v1beta/",
+        )
+    
 elif MODEL_NAME == "openai":
     llm = ChatOpenAI(
             temperature=1,

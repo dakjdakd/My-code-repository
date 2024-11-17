@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>价格套餐 - Knowledge to Podcast</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="../../static/css/style.css">
+    <link rel="stylesheet" href="../../components/nav/nav.css">
+    <link rel="stylesheet" href="../../components/pricing/pricing.css">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="/js/background.js" defer></script>
+    <script src="/js/common.js" defer></script>
+</head>
+<body>
+    <!-- SVG 滤镜 -->
+    <svg class="hidden">
+        <filter id="goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation="10" result="blur" />
+            <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -8" result="goo" />
+            <feBlend in="SourceGraphic" in2="goo" />
+        </filter>
+    </svg>
+
+    <!-- 渐变背景 -->
+    <div class="gradient-bg">
+        <div class="gradients-container">
+            <div class="g1"></div>
+            <div class="g2"></div>
+            <div class="g3"></div>
+            <div class="g4"></div>
+            <div class="g5"></div>
+        </div>
+    </div>
+
+    <!-- 导航栏 -->
+    <div id="nav-container"></div>
+
+    <div class="pricing-container">
+        <!-- 头部 -->
+        <div class="pricing-header">
+            <h1>选择适合您的套餐</h1>
+            <p class="subtitle">灵活的定价方案，满足不同需求</p>
+        </div>
+
+        <!-- 计费周期切换 -->
+        <div class="billing-toggle">
+            <span class="billing-option">月付</span>
+            <label class="toggle-switch">
+                <input type="checkbox" id="billingToggle">
+                <span class="slider"></span>
+            </label>
+            <span class="billing-option">年付</span>
+            <span class="save-badge">省20%</span>
+        </div>
+
+        <!-- 套餐卡片 -->
+        <div class="pricing-grid">
+            <!-- 免费版 -->
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h2>免费版</h2>
+                    <div class="price">
+                        <span class="amount">¥0</span>
+                        <span class="period">/永久</span>
+                    </div>
+                    <p class="description">体验基础功能，开启AI播客之旅</p>
+                </div>
+                <ul class="features">
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>每月10分钟音频生成</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>基础AI语音模型</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>标准客服支持</span>
+                    </li>
+                </ul>
+                <button class="plan-button free">开始使用</button>
+            </div>
+
+            <!-- 专业版 -->
+            <div class="pricing-card popular">
+                <div class="popular-badge">最受欢迎</div>
+                <div class="card-header">
+                    <h2>专业版</h2>
+                    <div class="price">
+                        <span class="amount monthly">¥99</span>
+                        <span class="amount yearly hidden">¥948</span>
+                        <span class="period">/月</span>
+                    </div>
+                    <p class="description">适合个人创作者和小型团队</p>
+                </div>
+                <ul class="features">
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>每月300分钟音频生成</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>高级AI语音模型</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>优先客服支持</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>自定义音色设置</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>批量处理功能</span>
+                    </li>
+                </ul>
+                <button class="plan-button popular">立即升级</button>
+            </div>
+
+            <!-- 企业版 -->
+            <div class="pricing-card">
+                <div class="card-header">
+                    <h2>企业版</h2>
+                    <div class="price">
+                        <span class="amount">定制</span>
+                        <span class="period"></span>
+                    </div>
+                    <p class="description">为大型企业提供定制化解决方案</p>
+                </div>
+                <ul class="features">
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>无限音频生成</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>专属AI语音模型</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>24/7专属客服</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>API接口访问</span>
+                    </li>
+                    <li>
+                        <i data-lucide="check" class="feature-icon"></i>
+                        <span>团队协作功能</span>
+                    </li>
+                </ul>
+                <button class="plan-button enterprise">联系我们</button>
+            </div>
+        </div>
+
+        <!-- 功能详细对比 -->
+        <div class="feature-comparison">
+            <h2>功能详细对比</h2>
+            <div class="comparison-table">
+                <div class="table-row header">
+                    <div class="feature-col">功能</div>
+                    <div class="plan-col">免费版</div>
+                    <div class="plan-col">专业版</div>
+                    <div class="plan-col">企业版</div>
+                </div>
+                <div class="table-row">
+                    <div class="feature-col">音频生成时长</div>
+                    <div class="plan-col">10分钟/月</div>
+                    <div class="plan-col">300分钟/月</div>
+                    <div class="plan-col">无限制</div>
+                </div>
+                <div class="table-row">
+                    <div class="feature-col">AI语音模型</div>
+                    <div class="plan-col">基础模型</div>
+                    <div class="plan-col">高级模型</div>
+                    <div class="plan-col">专属定制</div>
+                </div>
+                <div class="table-row">
+                    <div class="feature-col">导出格式</div>
+                    <div class="plan-col">WAV</div>
+                    <div class="plan-col">WAV, MP3</div>
+                    <div class="plan-col">全格式支持</div>
+                </div>
+                <div class="table-row">
+                    <div class="feature-col">客服支持</div>
+                    <div class="plan-col">邮件支持</div>
+                    <div class="plan-col">优先响应</div>
+                    <div class="plan-col">24/7专属客服</div>
+                </div>
+                <div class="table-row">
+                    <div class="feature-col">API访问</div>
+                    <div class="plan-col">
+                        <i data-lucide="x" class="feature-icon no"></i>
+                    </div>
+                    <div class="plan-col">
+                        <i data-lucide="x" class="feature-icon no"></i>
+                    </div>
+                    <div class="plan-col">
+                        <i data-lucide="check" class="feature-icon yes"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- FAQ部分 -->
+        <section class="pricing-faq">
+            <h2>常见问题</h2>
+            <div class="faq-grid">
+                <div class="faq-item">
+                    <h3>如何选择合适的套餐？</h3>
+                    <p>建议先使用免费版体验核心功能，根据您的使用频率和需求选择合适的套餐。专业版适合个人创作者和小型团队，企业版则为大型组织提供更多定制化选项。</p>
+                </div>
+                <div class="faq-item">
+                    <h3>可以随时更换套餐吗？</h3>
+                    <p>是的，您可以随时升级或降级您的套餐。升级后立即生效，降级则在当前计费周期结束后生效。</p>
+                </div>
+                <div class="faq-item">
+                    <h3>如何获取发票？</h3>
+                    <p>专业版和企业版用户可以在账单页面申请开具发票，支持增值税普通发票和专用发票。</p>
+                </div>
+                <div class="faq-item">
+                    <h3>是否提供退款？</h3>
+                    <p>我们提供7天无理由退款保证。如果您对服务不满意，可以在购买后7天内申请全额退款。</p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // 加载导航组件
+        fetch('../../components/nav/nav.html')
+            .then(response => response.text())
+            .then(html => {
+                document.getElementById('nav-container').innerHTML = html;
+                lucide.createIcons();
+            });
+    </script>
+</body>
+</html> 
